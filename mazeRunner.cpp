@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <mcpp/mcpp.h>
+// #include <mcpp/mcpp.h>
 
 #include "menuUtils.h"
 #include "Maze.h"
@@ -11,28 +11,78 @@
 
 enum States{
     ST_Main,
-    ST_GetMaze,
-    ST_SolveMaze,
-    ST_Creators,
-    ST_Exit
+    ST_GenMaze, //Generate Maze menu - 1 ADDED BY ME
+    ST_GetMaze, //Dummy message  - 2
+    ST_SolveMaze, //Solve maze menu - 3
+    ST_Creators, //Team info - 4
+    ST_Exit      // Exit message - 5 
 };
 
 int main(void){
 
     bool mode = NORMAL_MODE;
+    mode += 0;
     //read Mode
 
     
 
-    mcpp::MinecraftConnection mc; 
-    mc.doCommand("time set day"); 
+    // mcpp::MinecraftConnection mc; 
+    // mc.doCommand("time set day"); 
 
     States curState = ST_Main;
 
+    // bool inMainMenu = true;
+
+    int stateIndex = 0;
+    printMainMenu();
+    
     //State machine for menu        
     while (curState != ST_Exit)
     {
         //Do something
+        std::cin >> stateIndex;
+        if (std::cin.fail()) {
+            std::cin.clear();
+            std::cin.ignore(1000, '\n');
+            std::cout << "Please enter a numeric option" << std::endl;
+            curState = ST_Main;
+            printMainMenu();
+        } 
+        else {
+        if (curState != ST_Main) {
+            if (stateIndex == 1) {
+                std::cout << "You selected Option 1" << std::endl;
+            }
+            else if (stateIndex == 2) {
+                std::cout << "You selected Option 2" << std::endl;
+            }
+            curState = ST_Main;
+            printMainMenu();
+        }
+        else if (curState == ST_Main) {
+            if (stateIndex == ST_GenMaze) {
+                printGenerateMazeMenu();
+                curState = ST_GenMaze;
+            }
+            else if (stateIndex == ST_GetMaze) {
+                std::cout << "Dummy message (Build Maze in MC)" << std::endl;
+                curState = ST_Main;
+                printMainMenu();
+            }
+            else if (stateIndex == ST_SolveMaze) {
+                printSolveMazeMenu();
+                curState = ST_SolveMaze;
+            }
+            else if (stateIndex == ST_Creators) {
+                printTeamInfo();
+                curState = ST_Main;
+                printMainMenu();
+            }
+            else if (stateIndex == ST_Exit) {
+                curState = ST_Exit;
+            }
+        }
+        }
     }
 
     printExitMassage();
