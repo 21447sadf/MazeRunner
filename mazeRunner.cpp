@@ -5,6 +5,7 @@
 #include "menuUtils.h"
 #include "Maze.h"
 #include "Agent.h"
+#include "readMaze.h"
 
 #include <limits>
 
@@ -48,9 +49,10 @@ int main(void){
             std::cin >> option;
             if (option == 1) {
                 // Do Read Maze from terminal
-                std::cout << std::endl;
-                std::cout << "OPTION 1 [Read Maze from terminal] WAS SUCCESSFULLY EXECUTED";
-                std::cout << std::endl;
+                executeReadMaze();
+                // std::cout << std::endl;
+                // std::cout << "OPTION 1 [Read Maze from terminal] WAS SUCCESSFULLY EXECUTED";
+                // std::cout << std::endl;
             }
             else if (option == 2) {
                 // Do Generate Random Maze
