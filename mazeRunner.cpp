@@ -6,6 +6,7 @@
 #include "Maze.h"
 #include "Agent.h"
 #include "readMaze.h"
+#include "buildMaze.h"
 
 #include <limits>
 
@@ -31,6 +32,8 @@ int main(void){
     // mc.doCommand("time set day"); 
 
     States curState = ST_Main;
+    
+    readMaze rm;
 
     // Opening Menu
     printStartText();
@@ -49,7 +52,7 @@ int main(void){
             std::cin >> option;
             if (option == 1) {
                 // Do Read Maze from terminal
-                executeReadMaze();
+                rm.executeReadMaze();
                 // std::cout << std::endl;
                 // std::cout << "OPTION 1 [Read Maze from terminal] WAS SUCCESSFULLY EXECUTED";
                 // std::cout << std::endl;
@@ -79,9 +82,10 @@ int main(void){
         // Build Maze 
         else if (option == 2) {
             //Do Build Maze in MineCraft
-            std::cout << std::endl;
-            std::cout << "OPTION 2 [BUILD MAZE] WAS SUCCESSFUL EXECUTED";
-            std::cout << std::endl;
+            executeBuildMaze(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth(), rm.getEnvStructure());
+            // std::cout << std::endl;
+            // std::cout << "OPTION 2 [BUILD MAZE] WAS SUCCESSFUL EXECUTED";
+            // std::cout << std::endl;
         }
 
         // Solve Maze Menu

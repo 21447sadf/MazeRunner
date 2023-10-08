@@ -1,10 +1,27 @@
 #include "readMaze.h"
 
-void executeReadMaze() {
+// Constructor to initialize member variables
+readMaze::readMaze() {
+    build_x = 0;
+    build_y = 0;
+    build_z = 0;
+    envLength = 0;
+    envWidth = 0;
+    // envStructure = nullptr;
+}
+
+// readMaze::~readMaze() {
+//     for (int i = 0; i < envLength; i++) {
+//         delete[] envStructure[i];
+//     }
+//     delete[] envStructure;
+// }
+
+void readMaze::executeReadMaze() {
     // basePoint of Maze
-    int build_x = 0;
-    int build_y = 0;
-    int build_z = 0;
+    // int build_x = 0;
+    // int build_y = 0;
+    // int build_z = 0;
 
     std::cout << "Enter the basePoint of maze:" << std::endl;
 
@@ -13,8 +30,8 @@ void executeReadMaze() {
     std::cin >> build_z;
 
     // Length & Width of Maze
-    int envLength = 0;
-    int envWidth = 0;
+    // int envLength = 0;
+    // int envWidth = 0;
 
     std::cout << "Enter the length and width of maze:" << std::endl;
 
@@ -22,7 +39,8 @@ void executeReadMaze() {
     std::cin >> envWidth;
 
     // Maze Structure
-    char envStructure[envLength][envWidth];
+    // char envStructure[envLength][envWidth];
+    envStructure.resize(envLength, std::vector<char>(envWidth));
     char readChar;
 
     std::cout << "Enter the maze structure:" << std::endl;
@@ -46,4 +64,28 @@ void executeReadMaze() {
         std::cout << std::endl;
     }
     std::cout << "**End Printing Maze**" << std::endl;
+}
+
+int readMaze::getX() const {
+    return build_x;
+}
+
+int readMaze::getY() const {
+    return build_y;
+}
+
+int readMaze::getZ() const {
+    return build_z;
+}
+
+int readMaze::getLength() const {
+    return envLength;
+}
+
+int readMaze::getWidth() const {
+    return envWidth;
+}
+
+const std::vector<std::vector<char>>& readMaze::getEnvStructure() const {
+    return envStructure;
 }
