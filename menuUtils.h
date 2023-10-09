@@ -62,4 +62,3 @@ void printExitMassage(void){
 
 //printBuildMazeMenu
 
-3

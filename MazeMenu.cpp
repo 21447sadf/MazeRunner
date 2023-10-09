@@ -1,46 +1,62 @@
 #include <iostream>
 #include "menuUtils.h"
-// We can have extra function declarations here when we have them
-// This file implements the function declared in the menuU
-int main() {
+#include <limits>
 
+int main() {
     int choice;
 
-    printStartText(); // This is the function in the menuUtils.h
-  // try catch block to catch exceptions
+    printStartText(); 
+
     while (true) {
-        printMainMenu();  // This is another function in menuUtils.h
-        std::cin >> choice;
+        printMainMenu();
+        
+        while (!(std::cin >> choice) || (choice < 1) || (choice > 5)) {
+            std::cout << "Please enter a number between 1 and 5." << std::endl;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            printMainMenu();
+        }
 
         switch (choice) {
             case 1:
-                while(true) {
+                while (true) {
                     printGenerateMazeMenu();
-                    std::cin >> choice;
+
+                    while (!(std::cin >> choice) || (choice < 1) || (choice > 3)) {
+                        std::cout << "Please enter a number between 1 and 3." << std::endl;
+                        std::cin.clear();
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        printGenerateMazeMenu();
+                    }
+
+                    if (choice == 3) break;  
                     
-                    if(choice == 3) break;  // Exit to main menu
-                    
-                    // Additional logic for Generate Maze submenu options can be placed here
                     switch (choice) {
-                        // case 1, case 2 etc. 
+                        // Logic for options 1 and 2
                     }
                 }
                 break;
-                
+
             case 2:
-                // Call function or logic to build maze in Minecraft.
+                // Logic for building maze in Minecraft.
+                //Build Maze code 
                 break;
 
             case 3:
-                while(true) {
+                while (true) {
                     printSolveMazeMenu();
-                    std::cin >> choice;
-                    
-                    if(choice == 3) break;  // Exit to main menu
-                    
-                    // Additional logic for Solve Maze submenu options can be placed here
+
+                    while (!(std::cin >> choice) || (choice < 1) || (choice > 3)) {
+                        std::cout << "Please enter a number between 1 and 3." << std::endl;
+                        std::cin.clear();
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        printSolveMazeMenu();
+                    }
+
+                    if (choice == 3) break;
+
                     switch (choice) {
-                        // case 1, case 2 etc. 
+                        // Logic for options 1 and 2
                     }
                 }
                 break;
@@ -52,12 +68,8 @@ int main() {
             case 5:
                 printExitMassage();
                 return 0;
-
-            default:
-                std::cout << "Invalid choice. Please select a valid menu item." << std::endl;
         }
     }
 
     return 0;
-
 }

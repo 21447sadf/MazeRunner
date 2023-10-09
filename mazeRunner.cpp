@@ -14,7 +14,8 @@ enum States{
     ST_GetMaze,
     ST_SolveMaze,
     ST_Creators,
-    ST_Exit
+    ST_Exit,
+    ST_RandomMaze
 };
 
 int main(void){
@@ -39,5 +40,7 @@ int main(void){
 
 
     return EXIT_SUCCESS;
+
+    //State machine for RandomMaze
 
 }
