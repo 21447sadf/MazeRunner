@@ -27,6 +27,8 @@ int main(void){
     //read Mode
 
     int option;
+    bool mazeGenerated = false;
+    bool mazeBuilt = false;
 
     // mcpp::MinecraftConnection mc; 
     // mc.doCommand("time set day"); 
@@ -53,6 +55,7 @@ int main(void){
             if (option == 1) {
                 // Do Read Maze from terminal
                 rm.executeReadMaze();
+                mazeGenerated = true;
                 // std::cout << std::endl;
                 // std::cout << "OPTION 1 [Read Maze from terminal] WAS SUCCESSFULLY EXECUTED";
                 // std::cout << std::endl;
@@ -82,7 +85,18 @@ int main(void){
         // Build Maze 
         else if (option == 2) {
             //Do Build Maze in MineCraft
-            executeBuildMaze(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth(), rm.getEnvStructure());
+            if (mazeGenerated && !mazeBuilt) {
+                executeBuildMaze(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth(), rm.getEnvStructure());
+                mazeBuilt = true;
+            }
+            else if (mazeGenerated && mazeBuilt) {
+                reverseBuildMaze(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth());
+                executeBuildMaze(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth(), rm.getEnvStructure());
+                mazeBuilt = true;
+            }
+            else {
+                std::cout << "Maze not defined! Generate maze before Building." << std::endl;
+            }
             // std::cout << std::endl;
             // std::cout << "OPTION 2 [BUILD MAZE] WAS SUCCESSFUL EXECUTED";
             // std::cout << std::endl;
