@@ -7,6 +7,7 @@
 #include "Agent.h"
 #include "readMaze.h"
 #include "buildMaze.h"
+#include "solveManually.h"
 
 #include <limits>
 
@@ -29,6 +30,7 @@ int main(void){
     int option;
     bool mazeGenerated = false;
     bool mazeBuilt = false;
+    bool solveMan = false;
 
     // mcpp::MinecraftConnection mc; 
     // mc.doCommand("time set day"); 
@@ -86,6 +88,7 @@ int main(void){
         else if (option == 2) {
             //Do Build Maze in MineCraft
             if (mazeGenerated && !mazeBuilt) {
+                saveOrigBlocks(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth());
                 executeBuildMaze(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth(), rm.getEnvStructure());
                 mazeBuilt = true;
             }
@@ -109,16 +112,28 @@ int main(void){
             printSolveMazeMenu();
             std::cin >> option;
             if (option == 1) {
-                // Do Solve Manually
-                std::cout << std::endl;
-                std::cout << "OPTION 1 [Solve Manually] WAS SUCCESSFULLY EXECUTED";
-                std::cout << std::endl;
+                if (mazeBuilt) {
+                    // Do Solve Manually
+                    executeSolveManually(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth(), rm.getEnvStructure());
+                    solveMan = true;
+                    // std::cout << std::endl;
+                    // std::cout << "OPTION 1 [Solve Manually] WAS SUCCESSFULLY EXECUTED";
+                    // std::cout << std::endl;
+                }
+                else {
+                    std::cout << "Build Maze before solving..." << std::endl;
+                }
             }
             else if (option == 2) {
                 // Do Show Escape Route
-                std::cout << std::endl;
-                std::cout << "OPTION 2 [Show Escape Route] WAS SUCCESSFULLY EXECUTED";
-                std::cout << std::endl;
+                if (solveMan) {
+                    std::cout << std::endl;
+                    std::cout << "OPTION 2 [Show Escape Route] WAS SUCCESSFULLY EXECUTED";
+                    std::cout << std::endl;
+                }
+                else {
+                    std::cout << "Initialize player using Solve manually." << std::endl;
+                }
             }
             else if (option == 3) {
                 // Do Back (Return to Main Menu)
@@ -162,7 +177,7 @@ int main(void){
     }
 
     // Do Minecraft Reversal Here
-
+    reverseBuildMaze(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth());
     // Print Exit Message
     printExitMassage();
 
