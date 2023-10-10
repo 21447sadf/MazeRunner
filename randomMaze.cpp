@@ -8,9 +8,9 @@
 
 enum DIRECTIONS{
     UP,
-    DOWN,
+    LEFT,
     RIGHT,
-    LEFT
+    DOWN
 };
 
 void setStartingPoint(std::vector<std::vector<char>> &inputMaze) {
@@ -30,17 +30,17 @@ void setStartingPoint(std::vector<std::vector<char>> &inputMaze) {
     int position;
 
     if ((Wall == 0) || (Wall == 2)) {
-        std::uniform_int_distribution<> positionDistribution(1, numCols - 1);
+        std::uniform_int_distribution<> positionDistribution(1, numCols - 2);
         position = positionDistribution(gen);
         if (Wall == 0) {
             inputMaze.at(1).at(position) = '.';
         }
         else if (Wall == 2) {
-            inputMaze.at(numRows - 1).at(position) = '.';
+            inputMaze.at(numRows - 2).at(position) = '.';
         }
     }
     else if ((Wall == 1) || (Wall == 3)) {
-        std::uniform_int_distribution<> positionDistribution(1, numRows - 1);
+        std::uniform_int_distribution<> positionDistribution(1, numRows - 2);
         position = positionDistribution(gen);
         if (Wall == 1) {
             inputMaze.at(position).at(numCols - 2) = '.';
@@ -49,6 +49,62 @@ void setStartingPoint(std::vector<std::vector<char>> &inputMaze) {
             inputMaze.at(position).at(1) = '.';
         }
     }
+}
+
+bool isValid(std::vector<std::vector<char>> &inputMaze, unsigned int Z_Coord, unsigned int X_Coord) {
+    //Check if current cell exceeds maze boundaries
+    if ((X_Coord >= inputMaze.size()) || (X_Coord == 0)) { 
+        return false;
+    }
+    else if ((Z_Coord >= inputMaze.at(0).size()) || (Z_Coord == 0)) {
+        return false;
+    }
+
+    //Check if current cell is already carved as path '.'
+    if (inputMaze.at(X_Coord).at(Z_Coord) == '.') {
+        return false;
+    }
+
+    //In all other cases, cell is valid
+    return true;
+}
+
+void recursiveBackTrack(std::vector<std::vector<char>> &inputMaze, int currZ, int currX) {
+    // Generate random direction
+    // 0 = UP
+    // 1 = LEFT
+    // 2 = RIGHT 
+    // 3 = DOWN
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distrib_direction(0, 3);
+    int direction = distrib_direction(gen);
+    int nextCell_Z = currZ;
+    int nextCell_X = currX;
+
+    //Move cell in generated direction
+    if (direction == UP) {
+        std::cout << "UP" << std::endl;
+        nextCell_X = currX - 1;
+    }
+    else if (direction == LEFT) {
+        std::cout << "LEFT" << std::endl;
+        nextCell_Z = currZ - 1;
+    }
+    else if (direction == RIGHT) {
+        std::cout << "RIGHT" << std::endl;
+        nextCell_Z = currZ + 1;
+    }
+    else if (direction == DOWN) {
+        std::cout << "DOWN" << std::endl;
+        nextCell_X = currX + 1;
+    }
+
+    //Check if cell is valid
+    if (isValid(inputMaze, nextCell_Z, nextCell_X)) {
+        inputMaze.at(nextCell_X).at(nextCell_Z) = '.';
+    }
+    std::cout << "Done" << std::endl;
 }
 
 std::vector<std::vector<char>> randomMaze(void) {
@@ -87,25 +143,11 @@ std::vector<std::vector<char>> randomMaze(void) {
         std::cout << std::endl;
     }
 
-    // //Generate random starting coordinate
-    // int max_z = z_length - 1; //MIGHT NEED TO REVIEW X AND Z DIRECTIONS WHEN IMPLEMENTING IN MC
-    // int random_z = 0;
-    // int max_x = x_length - 1;
-    // int random_x = 0;
-
-    // std::random_device rd;
-    // std::mt19937 gen(rd());
-    // std::uniform_int_distribution<> distrib_z(1, max_z);
-    // random_z = distrib_z(gen);
-    // std::uniform_int_distribution<> distrib_x(1, max_x);
-    // random_x = distrib_x(gen);
-    // std::cout << random_x << " " << random_z << std::endl;
-    
-    // //Set starting point in maze to '.'
-    // maze.at(random_z).at(random_x) = '.';
-
     //Set starting point
     setStartingPoint(maze);
+
+    int startZ = 0;
+    int startX = 0;
 
     // TEST: Output modified maze
     std::cout << std::endl;
@@ -113,27 +155,23 @@ std::vector<std::vector<char>> randomMaze(void) {
         std::vector<char> row(z_length);
         for (unsigned int j = 0; j < row.size(); j++) {
             std::cout << maze.at(i).at(j) << " ";
+            if (maze.at(i).at(j) == '.') { //TEST
+                startZ = j;
+                startX = i;
+            }
         }
         std::cout << std::endl;
     }
 
-    // //Generate random direction
-    // std::uniform_int_distribution<> distrib_direction(0, 3);
-    // // int direction = distrib_direction(gen);
-    // int direction = 0;
-    // if (direction == UP) {
-    //     maze.at(random_z+1).at(random_x) = '.';
-    //     std::cout << "Entrance created";
-    // }
-
-    // //TEST: Output modified maze
-    // for (int i = 0; i < width; i++) {
-    //     std::vector<char> row(length);
-    //     for (unsigned int j = 0; j < row.size(); j++) {
-    //         std::cout << maze.at(i).at(j) << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
+    // TEST: Recursive Backtrack to carve first cell
+    recursiveBackTrack(maze, startZ, startX);
+    for (int i = 0; i < x_length; i++) {
+        std::vector<char> row(z_length);
+        for (unsigned int j = 0; j < row.size(); j++) {
+            std::cout << maze.at(i).at(j) << " ";
+        }
+        std::cout << std::endl;
+    }
 
     return maze;
 }
