@@ -15,6 +15,7 @@ int main() {
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             printMainMenu();
+            
         }
 
         switch (choice) {
@@ -38,8 +39,9 @@ int main() {
                 break;
 
             case 2:
-                // Logic for building maze in Minecraft.
-                //Build Maze code 
+        
+               std::cout << "Generating maze in Minecraft!" << std::endl;
+            
                 break;
 
             case 3:
@@ -73,3 +75,5 @@ int main() {
 
     return 0;
 }
+
+//change everything with if else lol because we can't use switch cases

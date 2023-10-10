@@ -38,6 +38,15 @@ void printSolveMazeMenu(void){
     std::cout << "Enter Menu item to continue: " << std::endl;
 }
 
+void printTerminalMazeMenu(void){
+     std::cout << std::endl;
+    std::cout << "------------- GENERATE MAZE -------------" << std::endl;
+    std::cout << "1) Generate Maze from Terminal" << std::endl;
+    std::cout << "2) Generate Random Maze" << std::endl;
+    std::cout << "3) Back" << std::endl;
+    std::cout << std::endl;
+    std::cout << "Enter Menu item to continue: " << std::endl;
+}
 
 void printTeamInfo(void){
     std::cout << std::endl;
