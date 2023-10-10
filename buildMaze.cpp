@@ -24,17 +24,6 @@ void executeBuildMaze(int build_x, int build_y, int build_z, int envLength, int 
     mcpp::Coordinate newPos(build_x, build_y + 10, build_z);
     mc.setPlayerPosition(newPos);
 
-    // for (int h = 0; h < 4; h++) {
-    //     for (int i = 0; i < envLength; i++) {
-    //         for (int j = 0; j < envWidth; j++) {
-    //             std::cout << blocks[h][i][j] << " ";
-    //         }
-    //         std::cout << std::endl;
-    //     }
-    //     std::cout << std::endl;
-    // }
-
-
     // Flatten the Maze Area
     mcpp::Coordinate flatLoc1(build_x, build_y - 1, build_z);
     mcpp::Coordinate flatLoc2(build_x + envLength, build_y, build_z + envWidth);
@@ -52,10 +41,7 @@ void executeBuildMaze(int build_x, int build_y, int build_z, int envLength, int 
         }
     }
 
-    // Remove Above
-    // mcpp::Coordinate corner1(build_x, build_y, build_z);
-    // mcpp::Coordinate corner2(build_x + envLength, build_y + 3, build_z + envWidth);
-    // mc.setBlocks(corner1, corner2, mcpp::Blocks::AIR);
+    // Remove Blocks Above the Ground
     mcpp::Coordinate removeCoord(build_x, build_y, build_z);
     for (height = 1; height <= 3; height++) {
         for (row = 0; row < envLength; row++) {
@@ -67,7 +53,7 @@ void executeBuildMaze(int build_x, int build_y, int build_z, int envLength, int 
         removeCoord = mcpp::Coordinate(build_x, build_y + height, build_z);
     }
 
-    // Build Maze
+    // Build The Maze
     mcpp::Coordinate coord(build_x, build_y, build_z);
     for (height = 1; height <= 3; height++) {
         for (row = 0; row < envLength; row++) {
@@ -98,34 +84,4 @@ void executeBuildMaze(int build_x, int build_y, int build_z, int envLength, int 
         }
         origCoord = mcpp::Coordinate(build_x, build_y - 1 + height, build_z);
     }
-
-    // Remove the Maze Blocks
-    // mcpp::Coordinate coord(build_x, build_y, build_z);
-    // for (int height = 1; height <= 3; height++) {
-    //     for (int row = 0; row < envLength; row++) {
-    //         for (int col = 0; col < envWidth; col++) {
-    //             mc.setBlock(coord + mcpp::Coordinate(row, 0, col), mcpp::Blocks::AIR);
-    //             std::this_thread::sleep_for(std::chrono::milliseconds(50)); // Delay for 50 milliseconds
-    //         }
-    //     }
-    //     coord = mcpp::Coordinate(build_x, build_y + height, build_z);
-    // }
-
-    // // Restore the Original Blocks
-    // mcpp::Coordinate location1(build_x, build_y, build_z);
-    // mcpp::Coordinate location2(build_x + envLength, build_y, build_z + envWidth);
-    // // std::vector<std::vector<int>> vec = mc.getHeights(location1, location2);
-    // for (int row = 0; row < envLength; row++) {
-    //     for (int col = 0; col < envWidth; col++) {
-    //         mcpp::Coordinate curLoc(build_x + row, vec[row][col], build_z + col);
-    //         mcpp::Coordinate fixedLoc(build_x + row, build_y - 1, build_z + col);
-    //         // mcpp::BlockType curBlock = mc.getBlock(curLoc);
-    //         mcpp::BlockType originalBlock = mc.getBlock(fixedLoc);
-            
-    //         if (vec[row][col] == build_y) {
-    //             mc.setBlock(curLoc, originalBlock);
-    //         }
-            
-    //         std::this_thread::sleep_for(std::chrono::milliseconds(50)); // Delay for 50 milliseconds
-    //     }
-    }
+}

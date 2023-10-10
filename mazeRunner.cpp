@@ -32,8 +32,8 @@ int main(void){
     bool mazeBuilt = false;
     bool solveMan = false;
 
-    // mcpp::MinecraftConnection mc; 
-    // mc.doCommand("time set day"); 
+    mcpp::MinecraftConnection mc; 
+    mc.doCommand("time set day"); 
 
     States curState = ST_Main;
     
@@ -58,9 +58,6 @@ int main(void){
                 // Do Read Maze from terminal
                 rm.executeReadMaze();
                 mazeGenerated = true;
-                // std::cout << std::endl;
-                // std::cout << "OPTION 1 [Read Maze from terminal] WAS SUCCESSFULLY EXECUTED";
-                // std::cout << std::endl;
             }
             else if (option == 2) {
                 // Do Generate Random Maze
@@ -100,9 +97,6 @@ int main(void){
             else {
                 std::cout << "Maze not defined! Generate maze before Building." << std::endl;
             }
-            // std::cout << std::endl;
-            // std::cout << "OPTION 2 [BUILD MAZE] WAS SUCCESSFUL EXECUTED";
-            // std::cout << std::endl;
         }
 
         // Solve Maze Menu
@@ -116,9 +110,6 @@ int main(void){
                     // Do Solve Manually
                     executeSolveManually(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth(), rm.getEnvStructure());
                     solveMan = true;
-                    // std::cout << std::endl;
-                    // std::cout << "OPTION 1 [Solve Manually] WAS SUCCESSFULLY EXECUTED";
-                    // std::cout << std::endl;
                 }
                 else {
                     std::cout << "Build Maze before solving..." << std::endl;
