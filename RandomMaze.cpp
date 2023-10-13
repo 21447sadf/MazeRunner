@@ -1,67 +1,108 @@
- #include <iostream>
-
+#include <iostream>
+#include <vector>
 #include <mcpp/mcpp.h>
-
-#include "menuUtils.h"
 #include "Maze.h"
 #include "Agent.h"
-#include "mazeRunner.cpp"
 #include <random>
-
-
 #define NORMAL_MODE 0
 #define TESTING_MODE 1
 
-// declare inputs
 
-int xPoint;
-int yPoint;
-int zPoint;
-int width;
-int length;
+// Check if its at the edge or carved or top using boolean statement
+// enumerator for adjacent value
+// function to check if the co ordinate is at the top or if the cell has already been carved.
+// store the path in a stack to keep track of where u are, then 
+bool isOnEdgeOrCarved(const std::vector<std::vector<char>> &maze, unsigned int x, unsigned int z)
+{
+    // Check if on edge
+    if (x == 0 || x == maze.size() - 1 || z == 0 || z == maze[0].size() - 1)
+    {
+        return true;
+    }
+    // Check if path is already carved
+    if (maze[x][z] == '.')
+    {
+        return true;
+    }
+    return false;
+}
 
+enum Direction
+{
+    Up,
+    Down,
+    Left,
+    Right
+};
 
-  std::vector<std::vector<char>> randomMaze(void){
-    States curState = ST_RandomMaze;
+// recursive backtrack algorithm
 
+std::vector<std::vector<char>> randomMaze()
+{
+    int xPoint, yPoint, zPoint, width, length;
     std::vector<std::vector<char>> maze;
-   // a vector of vectors to store the maze
 
-   std::cout<< "Please enter base point." << std::endl;
-   std::cin << xPoint;
-   std::cin << yPoint;
-   std::cin << zPoint;
-   
-   std::cout<< "Please enter width."
-   std::cin>>width;
-   
-   std::cout<<"Please enter length."
-   std::cin>>length;
-   
-   // recursive backtracking
+    std::cout << "Please enter the co-ordinates for the base point:" << std::endl;
+    std::cout << "xPoint:";
+    std::cin >> xPoint;
+    std::cout << "yPoint:";
+    std::cin >> yPoint;
+    std::cout << "zPoint:";
+    std::cin >> zPoint;
 
-  //instantiate the 2D array with x
+    std::cout << "Please enter width:";
+    std::cin >> width;
 
-    for(int i = 0 ; i < width; < i++){
-        maze.push_back(std::vector<char>row(length))
-        //adding the characters in the vectors (x)
-        std::vector<char>curRow = maze.at(i);
-    
-        for(int j = 0 ; j < length; j++){
-           maze.at(i).at(j)='x';
-           // looking at the column of that row and filling it up with x
-           std::cout<< maze.at(i).at(j) <<" ";
-             
+    std::cout << "Please enter length:";
+    std::cin >> length;
+
+    for (int i = 0; i < width; i++)
+    {
+        maze.push_back(std::vector<char>(length));
+        for (int j = 0; j < length; j++)
+        {
+            maze[i][j] = 'x';
+            std::cout << maze[i][j] << " ";
         }
-
-        std::cout<< endl;
+        std::cout << std::endl; // To move to the next line after printing each row
     }
 
+    // the recursive algorithm
+    // to choose a random starting point
 
+    int max_x = width - 1; // MIGHT NEED TO REVIEW X AND Z DIRECTIONS WHEN IMPLEMENTING IN MC
+    int random_x = 0;
+    int max_z = length - 1;
+    int random_z = 0;
 
-   return maze;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distrib_x(1, max_x - 1); // for width, the max_x -1 is to determine that the width is not at the edge
+    random_x = distrib_x(gen);
+    std::uniform_int_distribution<> distrib_z(1, max_z - 1); // for length, the max_z -1 is to determine that the width is not at the edge as well
+    random_z = distrib_z(gen);
+    std::cout << random_z << " " << random_x << std::endl;
 
+    // While current co ordinates are not your starting co ordinates
+    //  Recursive backtracking algorithm
+    //  Implementation of the first starting point
+    //  create a boolean function to check if the dot is at the edge
+
+    maze[random_z][random_x] = '.';
+    // bool startAtEdge = random_z == 1 || random_z == maze[0].size() - 2 || random_x == 1 || random_x == maze.size() - 2;
+    // recursiveBacktrack(maze, random_x, random_z, gen, startAtEdge);
+
+    // Implementation of the second starting point
+    // Recursive backtracking algorithm to start carving
+    // generate a random direction
+
+    return maze;
 }
-// engine
-// uniform distribution
-// seed
+
+// validate user input
+
+int main()
+{
+    std::vector<std::vector<char>> maze = randomMaze();
+    return 0;
+}

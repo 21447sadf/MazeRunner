@@ -1,0 +1,4 @@
+This is to write down the logic for the random maze generation.
+
+1. Recursive backtracking
+2. Stacls 
