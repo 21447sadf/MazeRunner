@@ -1,8 +1,10 @@
 #include <iostream>
 #include "menuUtils.h"
 #include <limits>
+#include "RandomMaze.h"
+#include "SolveMaze.h"
 
-int main() {
+void mazeMenu() {
     int choice;
 
     printStartText(); 
@@ -10,70 +12,53 @@ int main() {
     while (true) {
         printMainMenu();
         
-        while (!(std::cin >> choice) || (choice < 1) || (choice > 5)) {
+        if (!(std::cin >> choice) || (choice < 1) || (choice > 5)) {
             std::cout << "Please enter a number between 1 and 5." << std::endl;
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            printMainMenu();
-            
+            continue;
         }
 
-        switch (choice) {
-            case 1:
-                while (true) {
-                    printGenerateMazeMenu();
+        if (choice == 1) {
+            while (true) {
+                printGenerateMazeMenu();
 
-                    while (!(std::cin >> choice) || (choice < 1) || (choice > 3)) {
-                        std::cout << "Please enter a number between 1 and 3." << std::endl;
-                        std::cin.clear();
-                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                        printGenerateMazeMenu();
-                    }
-
-                    if (choice == 3) break;  
+                if (!(std::cin >> choice) || (choice < 1) || (choice > 3)) {
+                    std::cout << "Please enter a number between 1 and 3." << std::endl;
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    continue;
+                }
+                  printGenerateMazeMenu();
+                if (choice == 2) {
+                 
+                } else if (choice == 3) {
                     
-                    switch (choice) {
-                        // Logic for options 1 and 2
-                    }
+                    break;
                 }
-                break;
+            }
+        } else if (choice == 2) {
+            std::cout << "Generating maze in Minecraft!" << std::endl;
+        } else if (choice == 3) {
+            while (true) {
+              printGenerateMazeMenu();
 
-            case 2:
-        
-               std::cout << "Generating maze in Minecraft!" << std::endl;
-            
-                break;
-
-            case 3:
-                while (true) {
-                    printSolveMazeMenu();
-
-                    while (!(std::cin >> choice) || (choice < 1) || (choice > 3)) {
-                        std::cout << "Please enter a number between 1 and 3." << std::endl;
-                        std::cin.clear();
-                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                        printSolveMazeMenu();
-                    }
-
-                    if (choice == 3) break;
-
-                    switch (choice) {
-                        // Logic for options 1 and 2
-                    }
+                if (!(std::cin >> choice) || (choice < 1) || (choice > 3)) {
+                    std::cout << "Please enter a number between 1 and 3." << std::endl;
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    continue;
                 }
-                break;
 
-            case 4:
-                printTeamInfo();
-                break;
-
-            case 5:
-                printExitMassage();
-                return 0;
+                if (choice == 3) {
+                  
+                }
+            }
+        } else if (choice == 4) {
+            printTeamInfo();
+        } else if (choice == 5) {
+            printExitMassage();
+            break;
         }
     }
-
-    return 0;
 }
-
-//change everything with if else lol because we can't use switch cases
