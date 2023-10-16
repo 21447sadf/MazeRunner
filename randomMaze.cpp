@@ -10,17 +10,31 @@
 
 enum DIRECTIONS{
     UP,
-    LEFT,
     RIGHT,
-    DOWN
+    DOWN,
+    LEFT
 };
 
-void setStartingPoint(std::vector<std::vector<char>> &inputMaze) {
+int generateRandomOddNumber(int min, int max) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> distribution(min, max);
+
+    int randomNum;
+    do {
+        randomNum = distribution(gen);
+    } while (randomNum % 2 == 0); // Ensure it's an odd number
+
+    return randomNum;
+}
+
+std::pair<int, int> setStartingPoint(std::vector<std::vector<char>> &inputMaze) {
     // Choose random wall:
     // 0 = Top
     // 1 = Right
     // 2 = Bottom 
     // 3 = Left
+    std::pair<int, int> startPoint;
 
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -29,56 +43,90 @@ void setStartingPoint(std::vector<std::vector<char>> &inputMaze) {
 
     int numCols = inputMaze.at(0).size();
     int numRows = inputMaze.size();
-    int position;
 
-    if ((Wall == 0) || (Wall == 2)) {
-        std::uniform_int_distribution<> positionDistribution(1, numCols - 2);
-        position = positionDistribution(gen);
+    if ((Wall == 0) || (Wall == 2)) {  // If top or bottom wall selected
+        //Generate random odd number between min and max Z 
+        int Z = generateRandomOddNumber(1, numCols - 2);
         if (Wall == 0) {
-            inputMaze.at(1).at(position) = '.';
+            inputMaze.at(1).at(Z) = '.';
+            startPoint = std::make_pair(Z, 1);
         }
         else if (Wall == 2) {
-            inputMaze.at(numRows - 2).at(position) = '.';
+            inputMaze.at(numRows - 2).at(Z) = '.';
+            startPoint = std::make_pair(Z, numRows - 2);
         }
     }
-    else if ((Wall == 1) || (Wall == 3)) {
-        std::uniform_int_distribution<> positionDistribution(1, numRows - 2);
-        position = positionDistribution(gen);
+    else if ((Wall == 1) || (Wall == 3)) { // If left or right wall selected
+        //Generate random odd number between min and max X
+        int X = generateRandomOddNumber(1, numRows - 2);
         if (Wall == 1) {
-            inputMaze.at(position).at(numCols - 2) = '.';
+            inputMaze.at(X).at(numCols - 2) = '.';
+            startPoint = std::make_pair(numCols - 2, X);
         }
         else if (Wall == 3) {
-            inputMaze.at(position).at(1) = '.';
+            inputMaze.at(X).at(1) = '.';
+            startPoint = std::make_pair(1, X);
         }
     }
+    return startPoint;
+
 }
 
-bool isValidMove(std::vector<std::vector<char>> &inputMaze, unsigned int Z_Coord, unsigned int X_Coord) {
+bool isValid(std::vector<std::vector<char>> &inputMaze, int Z_Coord, int X_Coord, int direction) { 
+    int rows = inputMaze.size();
+    int columns = inputMaze.at(0).size();
     //Check if current cell exceeds maze boundaries
-    if ((X_Coord >= inputMaze.size() - 1) || (X_Coord == 0)) { 
+    if ((X_Coord >= rows - 1) || (X_Coord <= 0)) { 
         return false;
     }
-    else if ((Z_Coord >= inputMaze.at(0).size() - 1) || (Z_Coord == 0)) {
+    else if ((Z_Coord >= columns - 1) || (Z_Coord <= 0)) {
         return false;
     }
-
-    //Check if current cell is already carved as path '.'
-    if (inputMaze.at(X_Coord).at(Z_Coord) == '.') {
-        return false;
+    else {
+        //Check if current cell's wall is already carved as path '.'
+        if (direction == 0) { //UP
+            if ((inputMaze.at(X_Coord).at(Z_Coord) == '_') && (inputMaze.at(X_Coord+1).at(Z_Coord) == 'X')) {  // Check for 'X' and '_' UP
+            return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else if (direction == 1) { //RIGHT 
+            if (((inputMaze.at(X_Coord).at(Z_Coord) == '_')) && (inputMaze.at(X_Coord).at(Z_Coord-1) == 'X')) {
+            return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else if (direction == 2) { //DOWN
+            if (((inputMaze.at(X_Coord).at(Z_Coord) == '_')) && (inputMaze.at(X_Coord-1).at(Z_Coord) == 'X')) {
+            return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else if (direction == 3) { //LEFT
+            if (((inputMaze.at(X_Coord).at(Z_Coord) == '_')) && (inputMaze.at(X_Coord-1).at(Z_Coord + 1) == 'X')) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
     }
-
-    // //Check if cell is already visited
-    // if (visited.at(X_Coord).at(Z_Coord)) {
-    //     return false;
-    // }
 
     //In all other cases, cell is valid
     return true;
 }
 
-void createEntrance(std::vector<std::vector<char>> &inputMaze, unsigned int startZ, unsigned int startX) {
+void createEntrance(std::vector<std::vector<char>> &inputMaze, int startZ, int startX) {
+    int rows = inputMaze.size();
+    int columns = inputMaze.at(0).size();
     //If start position is at:
-    if ((startZ + 2) == inputMaze.at(0).size()) { //Right wall
+    if ((startZ + 2) == columns) { //Right wall
         inputMaze.at(startX).at(startZ + 1) = '.';
     }
     else if (startZ == 1) { // Left wall
@@ -87,140 +135,95 @@ void createEntrance(std::vector<std::vector<char>> &inputMaze, unsigned int star
     else if (startX == 1) {//T Top wall
         inputMaze.at(0).at(startZ) = '.';
     }
-    else if (startX + 2 == inputMaze.size()) {// Bottom wall
+    else if (startX + 2 == rows) {// Bottom wall
         inputMaze.at(startX + 1).at(startZ) = '.';
     }
-
-    // NOTE: MIGHT NEED TO ADD CONDITION FOR CORNERS 
 }
 
-std::vector<int> findNeighbors(std::vector<std::vector<char>> inputMaze, int currZ, int currX, std::vector<std::vector<bool>> visited) {
-    //Declare output
-    std::vector<int> neighbors;
+std::vector<std::pair<int, int>> unvisitedNeighbors(std::vector<std::vector<char>> maze, int Z, int X) {
+    std::vector<std::pair<int, int>> neighbors;
 
-    if (isValidMove(inputMaze, currZ, currX - 1)) {  //Check UP
-        neighbors.push_back(0);
-    }
-    if (isValidMove(inputMaze, currZ - 1, currX)) {  //Check LEFT
-        neighbors.push_back(1);
-    }
-    if (isValidMove(inputMaze, currZ + 1, currX)) {  //Check RIGHT
-        neighbors.push_back(2);
-    }
-    if (isValidMove(inputMaze, currZ, currX + 1)) {  //Check DOWN
-        neighbors.push_back(3);
+    //UP
+    if (isValid(maze, Z, X - 2, 0)) {
+    neighbors.push_back(std::make_pair(Z, X - 2));
     }
 
-    return neighbors; 
+    //RIGHT
+    if (isValid(maze, Z + 2, X, 1)) {
+    neighbors.push_back(std::make_pair(Z + 2, X));
+    }
+
+    //DOWN
+    if (isValid(maze, Z, X + 2, 2)) {
+    neighbors.push_back(std::make_pair(Z, X + 2));
+    }
+
+    //LEFT
+    if (isValid(maze, Z - 2, X, 3)) {
+    neighbors.push_back(std::make_pair(Z - 2, X));
+    }
+
+return neighbors;
 }
 
-void moveCell(std::vector<std::vector<char>> &inputMaze, int &Z, int &X, int direction) {
-    if (direction == UP) {
-        std::cout << "UP" << std::endl;
-        --X;
-    }
-    else if (direction == LEFT) {
-        std::cout << "LEFT" << std::endl;
-        --Z;
-    }
-    else if (direction == RIGHT) {
-        std::cout << "RIGHT" << std::endl;
-        ++Z;
-    }
-    else if (direction == DOWN) {
-        std::cout << "DOWN" << std::endl;
-        ++X;
-    }
-}
+void buildMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<std::pair<int, int>> &pathStack) {
+    //Carve path on current cell
+    maze.at(X).at(Z) = '.';
 
-void recursiveBackTrack(std::vector<std::vector<char>> &inputMaze, int currZ, int currX) {
-std::vector<std::pair<int, int>> directions = { {0, -2}, {0, 2}, {-2, 0}, {2, 0} };
-std::vector<std::vector<bool>> visited;
-visited.resize(inputMaze.size(), std::vector<bool>(inputMaze[0].size(), false));
-
-    // Shuffle the directions randomly
+    // Generate all neighbors and shuffle
+    std::vector<std::pair<int, int>> unvisitedneighbors = unvisitedNeighbors(maze, Z, X);
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::shuffle(directions.begin(), directions.end(), gen);
+    std::shuffle(unvisitedneighbors.begin(), unvisitedneighbors.end(), gen);
 
-    for (const auto& direction : directions) {
-        int newZ = currZ + direction.first;
-        int newX = currX + direction.second;
-
-        if (isValidMove(inputMaze, newZ, newX)) {
-            if (inputMaze[newX][newZ] == 'X') {
-                // Mark the new cell as a path
-                inputMaze[newX][newZ] = '.';
-
-                // Remove the wall between the current cell and the new cell
-                inputMaze[currX + direction.first / 2][currZ + direction.second / 2] = '.';
-
-                recursiveBackTrack(inputMaze, newZ, newX);
-            }
+    // If there are no unvisited neighbors and path isn't empty
+    if (unvisitedneighbors.empty() && (!pathStack.empty())) { 
+        //Backtrack to previous cell
+        pathStack.pop_back();
+        if (!pathStack.empty()) {
+            std::pair<int, int> prevCell = pathStack.back();
+            int nextZ = prevCell.first;
+            int nextX = prevCell.second;
+            buildMaze(maze, nextZ, nextX, pathStack);
         }
     }
-    // int direction;
-    // std::stack<std::pair<int, int>> pathStack;
-    // std::vector<std::vector<bool>> visited;
-    // pathStack.push(std::make_pair(currZ, currX));
-    // visited.resize(inputMaze.size(), std::vector<bool>(inputMaze[0].size(), false));
+        // While there are neighbors
+        else {
+        if (!unvisitedneighbors.empty()) {
+            //Choose a random neighbor
+            std::pair<int, int> direction = unvisitedneighbors.at(unvisitedneighbors.size() - 1);
+            unvisitedneighbors.pop_back();
+            int nextZ = direction.first;
+            int nextX = direction.second;
 
-    // while (!pathStack.empty()) {
-    //     // Find neighbors of the current cell
-    //     std::vector<int> neighbors = findNeighbors(inputMaze, currZ, currX, visited);
-
-    //     // Move cells if neighbors are not empty
-    //     if (!neighbors.empty()) {
-
-    //         std::random_device rd;
-    //         std::mt19937 gen(rd());
-    //         std::uniform_int_distribution<> distrib_direction(0, neighbors.size() - 1);
-    //         direction = neighbors.at(distrib_direction(gen));
-
-    //         moveCell(inputMaze, currZ, currX, direction);
-    //         inputMaze.at(currX).at(currZ) = '.';
-    //         visited.at(currX).at(currZ) = true;
-    //         pathStack.push(std::make_pair(currZ, currX));
-
-    //     } else if (neighbors.empty()) {
-    //         // Backtrack to the previous cell with unvisited neighbors
-    //         bool foundPreviousCell = false;
-    //         while (!pathStack.empty() && !foundPreviousCell) {
-    //             std::pair<int, int> prevCell = pathStack.top();
-    //             pathStack.pop();
-    //             currZ = prevCell.first;
-    //             currX = prevCell.second;
-
-    //             // Check if the previous cell has unvisited neighbors
-    //             if (!visited.at(currX).at(currZ) && !findNeighbors(inputMaze, currZ, currX, visited).empty()) {
-    //                 foundPreviousCell = true;
-    //             }
-    //         }
-
-    //         if (!foundPreviousCell) {
-    //             // If no such cell is found, exit the loop
-    //             break;
-    //         }
-    //     } else {
-    //         // If there are no cells left to backtrack to, exit the loop
-    //         break;
-    //     }
-    // }
+            //Remove wall between current cell and neighbor
+            if ((nextX - X == -2) && (nextZ - Z == 0)) {  // neighbor is UP
+                nextX += 1;
+                maze.at(nextX).at(nextZ) = '.';
+                nextX -= 1;
+            }
+            else if ((nextX - X == 0) && (nextZ - Z == -2)) {  // neighbor is LEFT
+                nextZ += 1;
+                maze.at(nextX).at(nextZ) = '.';
+                nextZ -= 1;
+            }
+            else if ((nextX - X == 0) && (nextZ - Z == 2)) {  // neighbor is RIGHT
+                nextZ -= 1;
+                maze.at(nextX).at(nextZ) = '.';
+                nextZ += 1;
+            }
+            else if ((nextX - X == 2) && (nextZ - Z == 0)) {  // neighbor is DOWN
+                nextX -= 1;
+                maze.at(nextX).at(nextZ) = '.';
+                nextX += 1;
+            }
+            pathStack.push_back(std::make_pair(nextZ, nextX));
+            buildMaze(maze, nextZ, nextX, pathStack);
+        }
+        }
 }
 
-// bool validBaseCoordinate(int &userInput) {
-
-//     while (std::cin.fail()) { //While input is non-integer values
-//         std::cin.clear();
-//         std::cin.ignore(1000, '\n');
-//         std::cout << "Invalid input - Ensure length and width are positive" << std::endl;
-//     }
-//     return true;
-// }
-
 std::vector<std::vector<char>> randomMaze(void) {
-
-    // curState = ST_RandomMaze;
 
     //Declare maze as 2D vector
     std::vector<std::vector<char>> maze;
@@ -232,80 +235,94 @@ std::vector<std::vector<char>> randomMaze(void) {
     int z_length = 0;
     int x_length = 0;
 
-    //Input base point
+    //Loop variable
+    bool validInput = false;
+
     std::cout << "Enter base point of maze" << std::endl;
-    std::cin >> xPoint;
-    std::cin >> yPoint;
-    std::cin >> zPoint;
+        while (!validInput) {
+        try {
+            if (!(std::cin >> xPoint) || !(std::cin >> yPoint) || !(std::cin >> zPoint)) {
+                throw std::invalid_argument("Invalid input. Please enter integers:");
+            }
+            else {
+                validInput = true;
+            }
+        }
+         catch (const std::exception& e) {
+            std::cerr << e.what() << std::endl;
+            std::cin.clear();  // Clear the error state
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear the input buffer
+        }
+    }
 
     //Input length and width
-    std::cout << "Enter z-length and x-length of maze" << std::endl;
-    std::cin >> z_length;
-    std::cin >> x_length;
+    validInput = false;
+    std::cout << "Enter length (z) and width (x) of maze:" << std::endl;
+    while (!validInput) {
+        try {
+            if (!(std::cin >> z_length) || !(std::cin >> x_length)) {
+                throw std::invalid_argument("Invalid input. Please enter integers:");
+            }
+            else if ((z_length % 2 == 0) || (x_length % 2 == 0)) { //If inputs are even
+                throw std::invalid_argument("Length and width values must be odd. Please re-enter:");
+            }
+            else {
+                validInput = true;
+            }
+        }
+         catch (const std::exception& e) {
+            std::cerr << e.what() << std::endl;
+            std::cin.clear();  // Clear the error state
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear the input buffer
+        }
+    }
 
-    //Check z and x-length are positive
-    // while (z_length < 0) {
-    //     std::cin >> z_length;
-    //     validateUserInput();
-    // }
-    
-    // while (x_length < 0) {
-    //     std::cin >> x_length;
-    //     validateUserInput();
-    // }
-
-    //Create maze intiialised with 'X' chars
+    //Initialise maze
+    std::cout << "INITIAL MAZE:" << std::endl;
     for (int i = 0; i < x_length; i++) {
         std::vector<char> row(z_length);
         maze.push_back(row);
-        for (unsigned int j = 0; j < row.size(); j++) {
-            maze.at(i).at(j) = 'X';
-            std::cout << maze.at(i).at(j) << " ";
+        //If even row, initialise it to 'XXXX...'
+        if ((i % 2) == 0) {
+            for (unsigned int j = 0; j < row.size(); j++) {
+                maze.at(i).at(j) = 'X';
+                std::cout << maze.at(i).at(j);
+            }
         }
-        std::cout << std::endl;
-    }
-
-    //Set starting point
-    setStartingPoint(maze);
-
-    int startZ = 0;
-    int startX = 0;
-
-    // TEST: Output modified maze
-    std::cout << std::endl;
-    for (int i = 0; i < x_length; i++) {
-        std::vector<char> row(z_length);
-        for (unsigned int j = 0; j < row.size(); j++) {
-            std::cout << maze.at(i).at(j) << " ";
-            if (maze.at(i).at(j) == '.') { //TEST
-                startZ = j;
-                startX = i;
+        //If uneven row, initialise it to 'X_X_X...'
+        else if ((i % 2) == 1) {
+            for (unsigned int j = 0; j < row.size(); j++) {
+                maze.at(i).at(j) = ((j % 2) == 0) ? ('X') : ('_');
+                std::cout << maze.at(i).at(j);
             }
         }
         std::cout << std::endl;
     }
 
-    // TEST: Set maze entrance
+    // Set starting point
+    std::pair<int, int> startPoint = setStartingPoint(maze);
+
+    int startZ = startPoint.first;
+    int startX = startPoint.second;
+
+    //Set maze entrance
     createEntrance(maze, startZ, startX);
-    std::cout << std::endl;
+
+    //Initialise pathStack and add start point
+    std::vector<std::pair<int, int>> pathStack;
+    pathStack.push_back(std::make_pair(startZ, startX));
+
+    //Build maze
+    buildMaze(maze, startZ, startX, pathStack);
+    std::cout << "RANDOM MAZE:" << std::endl;
     for (int i = 0; i < x_length; i++) {
         std::vector<char> row(z_length);
         for (unsigned int j = 0; j < row.size(); j++) {
-            std::cout << maze.at(i).at(j) << " ";
+            std::cout << maze.at(i).at(j);
         }
         std::cout << std::endl;
     }
 
-    // TEST: Recursive Backtrack to carve first cell
-    recursiveBackTrack(maze, startZ, startX);
-    std::cout << std::endl;
-    for (int i = 0; i < x_length; i++) {
-        std::vector<char> row(z_length);
-        for (unsigned int j = 0; j < row.size(); j++) {
-            std::cout << maze.at(i).at(j) << " ";
-        }
-        std::cout << std::endl;
-    }
 
     return maze;
 }
@@ -315,89 +332,3 @@ int main(void) {
 
     return EXIT_SUCCESS;
 }
-
-// #include <iostream>
-// #include <vector>
-// #include <random>
-// #include <ctime>
-// #include <algorithm>
-
-// enum class Direction {
-//     UP, DOWN, LEFT, RIGHT
-// };
-
-// const int MAZE_SIZE = 11; // Adjust the size as needed
-
-// // Helper function to check if a cell is within the maze bounds
-// bool isValidCell(int x, int y) {
-//     return x >= 0 && x < MAZE_SIZE && y >= 0 && y < MAZE_SIZE;
-// }
-
-// // Helper function to shuffle directions randomly
-// std::vector<Direction> shuffleDirections() {
-//     std::vector<Direction> directions = {Direction::UP, Direction::DOWN, Direction::LEFT, Direction::RIGHT};
-//     std::random_device rd;
-//     std::mt19937 g(rd());
-//     std::shuffle(directions.begin(), directions.end(), g);
-//     return directions;
-// }
-
-// // Recursive function to generate the maze
-// void generateMaze(std::vector<std::vector<char>>& maze, int x, int y) {
-//     std::vector<Direction> directions = shuffleDirections();
-
-//     for (const auto& direction : directions) {
-//         int dx = 0, dy = 0;
-
-//         switch (direction) {
-//             case Direction::UP:
-//                 dy = -2;
-//                 break;
-//             case Direction::DOWN:
-//                 dy = 2;
-//                 break;
-//             case Direction::LEFT:
-//                 dx = -2;
-//                 break;
-//             case Direction::RIGHT:
-//                 dx = 2;
-//                 break;
-//         }
-
-//         int nx = x + dx;
-//         int ny = y + dy;
-
-//         if (isValidCell(nx, ny) && maze[ny][nx] == ' ') {
-//             // Mark the path
-//             maze[ny][nx] = '.';
-//             maze[y + dy / 2][x + dx / 2] = '.';
-//             generateMaze(maze, nx, ny);
-//         }
-//     }
-// }
-
-// int main() {
-//     // Initialize the maze
-//     std::vector<std::vector<char>> maze(MAZE_SIZE, std::vector<char>(MAZE_SIZE, ' '));
-
-//     // Seed the random number generator
-//     std::srand(static_cast<unsigned>(std::time(nullptr)));
-
-//     // Set a random starting point
-//     int startX = std::rand() % (MAZE_SIZE / 2) * 2;
-//     int startY = std::rand() % (MAZE_SIZE / 2) * 2;
-
-//     // Generate the maze starting from the random point
-//     generateMaze(maze, startX, startY);
-
-//     // Print the maze
-//     for (int i = 0; i < MAZE_SIZE; i++) {
-//         for (int j = 0; j < MAZE_SIZE; j++) {
-//             std::cout << maze[i][j] << ' ';
-//         }
-//         std::cout << '\n';
-//     }
-
-//     return 0;
-// }
-

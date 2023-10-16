@@ -31,6 +31,11 @@ int main(void){
     // mcpp::MinecraftConnection mc; 
     // mc.doCommand("time set day"); 
 
+    //String array to store error messages
+    std::string error_messages [3];
+    std::string main = "Invalid input. Please enter a number between 1 and 5"; //MAIN 
+    std::string sub_menu = "Invalid input. Please enter number between 1 and 3";
+
     States curState = ST_Main;
 
     // bool inMainMenu = true;
@@ -38,42 +43,52 @@ int main(void){
     int stateIndex = 0;
     printMainMenu();
 
-    
+    std::cin >> stateIndex;
     
     //State machine for menu        
     while (curState != ST_Exit)
     {
         //Do something
-        std::cin >> stateIndex;
-        while ((stateIndex > 5) || (stateIndex < 1)) {
-            std::cout << "Please enter a number between 1 and 5" << std::endl;
-        
-        if (curState == ST_Main) {
-            if ((stateIndex > 5) || (stateIndex < 1)) {
-            std::cout << "Please enter a number between 1 and 5" << std::endl;
-            }
-        }
-        else if ((curState == ST_GenMaze) || (curState == ST_SolveMaze)) {
-            while ((stateIndex > 3) || (stateIndex < 1)) {
-                std::cout << "Please enter a number between 1 and 3" << std::endl;
-            }
-        }
-        else if (std::cin.fail()) {   // Add error condition for number options > 5 or < 0
+        if (std::cin.fail()) {   // If input was not an int
             std::cin.clear();
             std::cin.ignore(1000, '\n');
-            std::cout << "Please enter a numeric option" << std::endl;
+            std::string error_out;
+            if (curState == ST_Main) {
+                if ((stateIndex < 1) ||(stateIndex > 5)) {  // INVALID INPUT ON MAIN MENU
+                std::cout << "Invalid input. Please enter a number between 1 and 5" << std::endl;
+                }
+            }
+            else if ((curState == ST_GenMaze) || (curState == ST_SolveMaze)) {
+                if ((stateIndex < 1) || (stateIndex > 3)) {
+                std::cout << "Invalid input. Please enter number between 1 and 3" << std::endl;
+                }
+            }
+            else {
             curState = ST_Main;
             printMainMenu();
+            }
         } 
         if (curState != ST_Main) {
-            if (stateIndex == 1) {
-                std::cout << "You selected Option 1" << std::endl;
+            if (curState == ST_GenMaze) {
+                if (stateIndex == 1) {
+                    std::cout << "You selected Read Maze from Terminal" << std::endl;
+                }
+                else if (stateIndex == 2) {
+                    std::cout << "You selected Generate Random Maze" << std::endl;
+                }
+                curState = ST_Main;
+                printMainMenu();
             }
-            else if (stateIndex == 2) {
-                std::cout << "You selected Option 2" << std::endl;
+            else if (curState == ST_SolveMaze) {
+                if (stateIndex == 1) {
+                    std::cout << "You selected Solve Manually" << std::endl;
+                }
+                else if (stateIndex == 2) {
+                    std::cout << "You selected Show Escape Route" << std::endl;
+                }
+                curState = ST_Main;
+                printMainMenu();
             }
-            curState = ST_Main;
-            printMainMenu();
         }
         else if (curState == ST_Main) {
             if (stateIndex == ST_GenMaze) {
@@ -98,9 +113,10 @@ int main(void){
                 curState = ST_Exit;
             }
         }
+        if (curState != ST_Exit) {
+            std::cin >> stateIndex;
         }
-
-    }
+        }
 
     printExitMassage();
 
