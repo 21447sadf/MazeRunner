@@ -4,6 +4,7 @@
 #include "Maze.h"
 #include "Agent.h"
 #include <random>
+#include <algorithm>
 #define NORMAL_MODE 0
 #define TESTING_MODE 1
 
@@ -87,8 +88,7 @@ std::vector<std::vector<char>> randomMaze()
     //  Recursive backtracking algorithm
     //  Implementation of the first starting point
     //  create a boolean function to check if the dot is at the edge
-
-    maze[random_z][random_x] = '.';
+ 
     // bool startAtEdge = random_z == 1 || random_z == maze[0].size() - 2 || random_x == 1 || random_x == maze.size() - 2;
     // recursiveBacktrack(maze, random_x, random_z, gen, startAtEdge);
 
@@ -99,10 +99,52 @@ std::vector<std::vector<char>> randomMaze()
     return maze;
 }
 
+    
+ void recursiveBacktrack(std::vector<std::vector<char>> &maze, int x, int z, std::mt19937 &gen) 
+{
+    std::vector<Direction> directions = {Up, Down, Left, Right};
+    std::shuffle(directions.begin(), directions.end(), gen); // Shuffle the directions for randomness
+
+    for (auto dir : directions) 
+    {
+        int newX = x, newZ = z;
+        switch (dir) 
+        {
+            case Up:    newX -= 2; break;
+            case Down:  newX += 2; break;
+            case Left:  newZ -= 2; break;
+            case Right: newZ += 2; break;
+        }
+
+        // Check if the newX, newZ position is valid for moving to
+       if (newX > 0 && newX < static_cast<int>(maze.size()) && newZ > 0 && newZ < static_cast<int>(maze[0].size()) && maze[newX][newZ] == 'x')
+
+        {
+            // Carve a path to the new cell
+            maze[newX][newZ] = '.';
+            if (dir == Up) maze[x-1][z] = '.';
+            if (dir == Down) maze[x+1][z] = '.';
+            if (dir == Left) maze[x][z-1] = '.';
+            if (dir == Right) maze[x][z+1] = '.';
+
+            // Recursively call the function with the new position
+            recursiveBacktrack(maze, newX, newZ, gen);
+        }
+    }
+}
+    
 // validate user input
 
-int main()
+
+
+int main() 
 {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    int random_x = 0;
+    int random_z = 0;
+
     std::vector<std::vector<char>> maze = randomMaze();
+    recursiveBacktrack(maze, random_x, random_z, gen);
     return 0;
 }
