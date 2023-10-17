@@ -14,12 +14,13 @@ enum States{
     ST_GetMaze,
     ST_SolveMaze,
     ST_Creators,
-    ST_Exit
+    ST_Exit,
+    ST_RandomMaze  //Random Maze enumerator
 };
 
 int main(void){
 
-    bool mode = NORMAL_MODE;
+   // bool mode = NORMAL_MODE;
     //read Mode
 
     
@@ -35,9 +36,196 @@ int main(void){
         //Do something
     }
 
+   // Random_maze+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
     printExitMassage();
 
 
     return EXIT_SUCCESS;
+
+    //State machine for RandomMaze
 
 }

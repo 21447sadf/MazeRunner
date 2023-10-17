@@ -1,0 +1,16 @@
+This is to write down the logic for the random maze generation.
+
+1. Recursive backtracking
+2. Stacks
+
+While there are unvisited neighbors:
+Choose a random direction.
+If moving in that direction would land you on an unvisited cell:
+Carve a path to that cell.
+Push your current position onto a stack.
+Move to that cell.
+Make it the current cell.
+If the current cell has no unvisited neighbors:
+Pop a cell from the stack.
+Make it the current cell.
+Repeat until the stack is empty.
