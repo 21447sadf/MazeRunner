@@ -32,8 +32,8 @@ int main(void){
     bool mazeBuilt = false;
     bool solveMan = false;
 
-    mcpp::MinecraftConnection mc; 
-    mc.doCommand("time set day"); 
+    // mcpp::MinecraftConnection mc; 
+    // mc.doCommand("time set day"); 
 
     States curState = ST_Main;
     

@@ -12,7 +12,7 @@ void saveOrigBlocks(int build_x, int build_y, int build_z, int envLength, int en
     mcpp::MinecraftConnection mc;
     //Save Cuboid of Original Blocks before Flatenning
     mcpp::Coordinate origLoc1(build_x, build_y - 1, build_z);
-    mcpp::Coordinate origLoc2(build_x + envLength, build_y + 4, build_z + envWidth);
+    mcpp::Coordinate origLoc2(build_x + envLength - 1, build_y + 4, build_z + envWidth - 1);
     blocks = mc.getBlocks(origLoc1, origLoc2);
 }
 
@@ -24,9 +24,22 @@ void executeBuildMaze(int build_x, int build_y, int build_z, int envLength, int 
     mcpp::Coordinate newPos(build_x, build_y + 10, build_z);
     mc.setPlayerPosition(newPos);
 
+    std::cout << "Flattening maze area..." << std::endl;
+    // Remove Blocks Above the Ground
+    mcpp::Coordinate removeCoord(build_x, build_y, build_z);
+    for (height = 1; height <= 3; height++) {
+        for (row = 0; row < envLength; row++) {
+            for (col = 0; col < envWidth; col++) {
+                mc.setBlock(removeCoord + mcpp::Coordinate(row, 0, col), mcpp::Blocks::AIR);
+                std::this_thread::sleep_for(std::chrono::milliseconds(50)); // Delay for 50 milliseconds
+            }
+        }
+        removeCoord = mcpp::Coordinate(build_x, build_y + height, build_z);
+    }
+    
     // Flatten the Maze Area
     mcpp::Coordinate flatLoc1(build_x, build_y - 1, build_z);
-    mcpp::Coordinate flatLoc2(build_x + envLength, build_y, build_z + envWidth);
+    mcpp::Coordinate flatLoc2(build_x + envLength - 1, build_y - 1, build_z + envWidth - 1);
     // std::vector<std::vector<int>> 
     vec = mc.getHeights(flatLoc1, flatLoc2);
     for (row = 0; row < envLength; row++) {
@@ -41,18 +54,7 @@ void executeBuildMaze(int build_x, int build_y, int build_z, int envLength, int 
         }
     }
 
-    // Remove Blocks Above the Ground
-    mcpp::Coordinate removeCoord(build_x, build_y, build_z);
-    for (height = 1; height <= 3; height++) {
-        for (row = 0; row < envLength; row++) {
-            for (col = 0; col < envWidth; col++) {
-                mc.setBlock(removeCoord + mcpp::Coordinate(row, 0, col), mcpp::Blocks::AIR);
-                std::this_thread::sleep_for(std::chrono::milliseconds(50)); // Delay for 50 milliseconds
-            }
-        }
-        removeCoord = mcpp::Coordinate(build_x, build_y + height, build_z);
-    }
-
+    std::cout << "Building maze..." << std::endl;
     // Build The Maze
     mcpp::Coordinate coord(build_x, build_y, build_z);
     for (height = 1; height <= 3; height++) {
@@ -67,12 +69,14 @@ void executeBuildMaze(int build_x, int build_y, int build_z, int envLength, int 
         }
         coord = mcpp::Coordinate(build_x, build_y + height, build_z);
     }
+    std::cout << "Maze building complete." << std::endl;
 }
 
     void reverseBuildMaze(int build_x, int build_y, int build_z, int envLength, int envWidth) {
     // Establish Connection To Minecraft
     mcpp::MinecraftConnection mc;
 
+    std::cout << "Reverting maze area..." << std::endl; 
     // Replace Original Blocks
     mcpp::Coordinate origCoord(build_x, build_y - 1, build_z);
     for (height = 1; height <= 4; height++) {
