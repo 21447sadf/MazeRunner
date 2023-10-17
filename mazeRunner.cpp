@@ -61,16 +61,16 @@ int main(void){
             }
             else if (option == 2) {
                 // Do Generate Random Maze
-                std::cout << std::endl;
-                std::cout << "OPTION 2 [Generate Random Maze] WAS SUCCESSFULLY EXECUTED";
-                std::cout << std::endl;
+                // std::cout << std::endl;
+                // std::cout << "OPTION 2 [Generate Random Maze] WAS SUCCESSFULLY EXECUTED";
+                // std::cout << std::endl;
             }
             else if (option == 3) {
                 // Do Back (Return to Main Menu)
                 curState = ST_Main;
-                std::cout << std::endl;
-                std::cout << "OPTION 3 [Back] WAS SUCCESSFUL EXECUTED";
-                std::cout << std::endl;
+                // std::cout << std::endl;
+                // std::cout << "OPTION 3 [Back] WAS SUCCESSFUL EXECUTED";
+                // std::cout << std::endl;
             }
             else {
                 std::cout << std::endl;
@@ -128,9 +128,9 @@ int main(void){
             }
             else if (option == 3) {
                 // Do Back (Return to Main Menu)
-                std::cout << std::endl;
-                std::cout << "OPTION 3 [Back] WAS SUCCESSFUL EXECUTED";
-                std::cout << std::endl;
+                // std::cout << std::endl;
+                // std::cout << "OPTION 3 [Back] WAS SUCCESSFUL EXECUTED";
+                // std::cout << std::endl;
                 curState = ST_Main;
             }
             else {
@@ -168,7 +168,9 @@ int main(void){
     }
 
     // Do Minecraft Reversal Here
-    reverseBuildMaze(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth());
+    if (mazeBuilt) {
+        reverseBuildMaze(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth());
+    }
     // Print Exit Message
     printExitMassage();
 
