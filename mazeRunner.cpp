@@ -63,6 +63,7 @@ int main(void){
             }
             else if (option == 2) {
                 // Do Generate Random Maze
+                
                 std::cout << std::endl;
                 std::cout << "OPTION 2 [Generate Random Maze] WAS SUCCESSFULLY EXECUTED";
                 std::cout << std::endl;
