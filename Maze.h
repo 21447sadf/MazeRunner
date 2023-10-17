@@ -15,6 +15,11 @@ public:
 
 private:
     /* data */
+    mcpp::Coordinate basePoint;
+    mcpp::Coordinate startPoint;
+    int xlength;
+    int zlength;
+    bool mode;
 
 };
 

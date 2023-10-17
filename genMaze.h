@@ -1,10 +1,6 @@
 #include <iostream> 
-#include "menuUtils.h"
-#include "Maze.h"
-#include "Agent.h"
 #include <vector>
 #include <random>
-#include <stack>
 #include <utility>
 #include <algorithm>
 
@@ -159,7 +155,7 @@ std::vector<std::pair<int, int>> unvisitedNeighbors(std::vector<std::vector<char
 return neighbors;
 }
 
-void buildMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<std::pair<int, int>> &pathStack) {
+void buildMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<std::pair<int, int>> &path) {
     //Carve path on current cell
     maze.at(X).at(Z) = '.';
 
@@ -170,14 +166,14 @@ void buildMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<s
     std::shuffle(unvisitedneighbors.begin(), unvisitedneighbors.end(), gen);
 
     // If there are no unvisited neighbors and path isn't empty
-    if (unvisitedneighbors.empty() && (!pathStack.empty())) { 
+    if (unvisitedneighbors.empty() && (!path.empty())) { 
         //Backtrack to previous cell
-        pathStack.pop_back();
-        if (!pathStack.empty()) {
-            std::pair<int, int> prevCell = pathStack.back();
+        path.pop_back();
+        if (!path.empty()) {
+            std::pair<int, int> prevCell = path.back();
             int nextZ = prevCell.first;
             int nextX = prevCell.second;
-            buildMaze(maze, nextZ, nextX, pathStack);
+            buildMaze(maze, nextZ, nextX, path);
         }
     }
         // While there are neighbors
@@ -210,8 +206,10 @@ void buildMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<s
                 maze.at(nextX).at(nextZ) = '.';
                 nextX += 1;
             }
-            pathStack.push_back(std::make_pair(nextZ, nextX));
-            buildMaze(maze, nextZ, nextX, pathStack);
+            //Add cell to path
+            path.push_back(std::make_pair(nextZ, nextX));
+            //Call buildMaze on next cell
+            buildMaze(maze, nextZ, nextX, path);
         }
         }
 }
@@ -231,6 +229,7 @@ std::vector<std::vector<char>> randomMaze(void) {
     //Loop variable
     bool validInput = false;
 
+    // Loop to prompt+check base point input
     std::cout << "Enter base point of maze" << std::endl;
         while (!validInput) {
         try {
@@ -248,7 +247,7 @@ std::vector<std::vector<char>> randomMaze(void) {
         }
     }
 
-    //Input length and width
+    //Loop to prompt+check user length and width input
     validInput = false;
     std::cout << "Enter length (z) and width (x) of maze:" << std::endl;
     while (!validInput) {
@@ -256,11 +255,8 @@ std::vector<std::vector<char>> randomMaze(void) {
             if (!(std::cin >> z_length) || !(std::cin >> x_length)) {
                 throw std::invalid_argument("Invalid input. Please enter integers:");
             }
-            else if ((z_length % 2 == 0) || (x_length % 2 == 0)) { //If inputs are even
-                throw std::invalid_argument("Length and width values must be odd. Please re-enter:");
-            }
-            else if ((z_length < 0) || (x_length < 0)) {
-                throw std::invalid_argument("Length and width values must be positive. Please re-enter:");
+            else if ((z_length % 2 == 0) || (x_length % 2 == 0) || (z_length < 0) || (x_length < 0)) { //If inputs are even or negative
+                throw std::invalid_argument("Length and width values must be odd and positive. Please re-enter:");
             }
             else {
                 validInput = true;
@@ -300,12 +296,12 @@ std::vector<std::vector<char>> randomMaze(void) {
     //Set maze entrance
     createEntrance(maze, startZ, startX);
 
-    //Initialise pathStack and add start point
-    std::vector<std::pair<int, int>> pathStack;
-    pathStack.push_back(std::make_pair(startZ, startX));
+    //Initialise path and add start point
+    std::vector<std::pair<int, int>> path;
+    path.push_back(std::make_pair(startZ, startX));
 
     //Build maze
-    buildMaze(maze, startZ, startX, pathStack);
+    buildMaze(maze, startZ, startX, path);
 
     //Output "Maze generated successfully" + Maze info
     std::cout << "Maze generated successfully" << std::endl
@@ -326,10 +322,4 @@ std::vector<std::vector<char>> randomMaze(void) {
     std::cout << "**End Printing Maze**" << std::endl;
 
     return maze;
-}
-
-int main(void) {
-    std::vector<std::vector<char>> result = randomMaze();
-
-    return EXIT_SUCCESS;
 }

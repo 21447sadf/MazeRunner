@@ -7,6 +7,9 @@
 #include "Agent.h"
 
 
+#include "genMaze.h"
+
+
 #define NORMAL_MODE 0
 #define TESTING_MODE 1
 
@@ -75,6 +78,7 @@ int main(void){
                 }
                 else if (stateIndex == 2) {
                     std::cout << "You selected Generate Random Maze" << std::endl;
+                    std::vector<std::vector<char>> maze = randomMaze();
                 }
                 curState = ST_Main;
                 printMainMenu();
