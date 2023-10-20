@@ -231,7 +231,7 @@ void buildMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<s
 }
 
 //Function to generate a random maze
-std::vector<std::vector<char>> randomMaze(void) {
+std::vector<std::vector<char>> genMaze(void) {
 
     //Declare maze as 2D vector
     std::vector<std::vector<char>> maze;

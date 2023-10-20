@@ -4,7 +4,7 @@
 #include <mcpp/mcpp.h>
 
 //Function to print escape route in terminal
-void printRoute(std::vector<std::vector<char>> escapeRoute, mcpp::Coordinate playerLoc) {
+void printRoute(std::vector<std::vector<char>> escapeRoute, mcpp::Coordinate &playerLoc) {
     int steps = escapeRoute.size();
 
     for (int i = 0; i < steps; i++) {

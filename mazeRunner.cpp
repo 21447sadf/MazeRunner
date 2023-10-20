@@ -31,17 +31,20 @@ int main(void){
 
     
 
-    // mcpp::MinecraftConnection mc; 
-    // mc.doCommand("time set day"); 
+    mcpp::MinecraftConnection mc; 
+    mc.doCommand("time set day"); 
 
-    //String array to store error messages
-    std::string error_messages [3];
-    std::string main = "Invalid input. Please enter a number between 1 and 5"; //MAIN 
-    std::string sub_menu = "Invalid input. Please enter number between 1 and 3";
+    //Error messages
+    std::string main_menu_Error = "Invalid input. Please enter a number between 1 and 5"; //MAIN 
+    std::string sub_menu_Error = "Invalid input. Please enter number between 1 and 3";
+
+    //Get player location
+    mcpp::Coordinate playerLoc = mc.getPlayerPosition();
+
+    //Agent Object
+    Agent player(playerLoc);
 
     States curState = ST_Main;
-
-    // bool inMainMenu = true;
 
     int stateIndex = 0;
     printMainMenu();
@@ -58,12 +61,12 @@ int main(void){
             std::string error_out;
             if (curState == ST_Main) {
                 if ((stateIndex < 1) ||(stateIndex > 5)) {  // INVALID INPUT ON MAIN MENU
-                std::cout << "Invalid input. Please enter a number between 1 and 5" << std::endl;
+                std::cout << main_menu_Error << std::endl;
                 }
             }
             else if ((curState == ST_GenMaze) || (curState == ST_SolveMaze)) {
                 if ((stateIndex < 1) || (stateIndex > 3)) {
-                std::cout << "Invalid input. Please enter number between 1 and 3" << std::endl;
+                std::cout << sub_menu_Error << std::endl;
                 }
             }
             else {
@@ -78,7 +81,7 @@ int main(void){
                 }
                 else if (stateIndex == 2) {
                     std::cout << "You selected Generate Random Maze" << std::endl;
-                    std::vector<std::vector<char>> maze = randomMaze();
+                    std::vector<std::vector<char>> maze = genMaze();
                 }
                 curState = ST_Main;
                 printMainMenu();
@@ -89,6 +92,8 @@ int main(void){
                 }
                 else if (stateIndex == 2) {
                     std::cout << "You selected Show Escape Route" << std::endl;
+                    player.orientPlayer();
+                    std::vector<mcpp::Coordinate> route = player.findPath();
                 }
                 curState = ST_Main;
                 printMainMenu();
