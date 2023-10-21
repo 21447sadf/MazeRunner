@@ -36,11 +36,17 @@ public:
     // std::vector<bool> wallsAroundBlock(mcpp::Coordinate &location);
     // std::vector<mcpp::Coordinate> Agent::wallsAroundBlock(mcpp::Coordinate location);
 
-   AgentOrientation findForwardDirection(mcpp::Coordinate currloc);
+//    AgentOrientation findForwardDirection(mcpp::Coordinate currloc);
 
-    mcpp::Coordinate moveForward(mcpp::Coordinate loc);
+//     mcpp::Coordinate moveForward(mcpp::Coordinate loc);
 
-    void updateRightWall(mcpp::Coordinate loc);
+//     void updateRightWall(mcpp::Coordinate loc, mcpp::Coordinate &rightWall);
+
+    void turnRight(AgentOrientation &currDirection);
+    mcpp::Coordinate advanceForward(mcpp::Coordinate currBlock, AgentOrientation currDirection);
+    bool isWallInFront(mcpp::Coordinate currBlock, AgentOrientation orientation);
+    bool isWallToRight(mcpp::Coordinate currBlock, AgentOrientation orientation);
+    bool endReached(mcpp::Coordinate currBlock);
 
     std::vector<mcpp::Coordinate> findPath();
 
@@ -49,6 +55,7 @@ private:
     mcpp::MinecraftConnection mc;
     mcpp::Coordinate playerLoc;
     std::vector<mcpp::Coordinate> path;
+    AgentOrientation agentdirection;
     mcpp::Coordinate rightWall;
 
 };

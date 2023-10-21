@@ -92,7 +92,6 @@ int main(void){
                 }
                 else if (stateIndex == 2) {
                     std::cout << "You selected Show Escape Route" << std::endl;
-                    player.orientPlayer();
                     std::vector<mcpp::Coordinate> route = player.findPath();
                 }
                 curState = ST_Main;
