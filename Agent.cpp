@@ -191,6 +191,8 @@ std::vector<mcpp::Coordinate> Agent::findPath() {
     //Search starts at the right wall set in orientPlayer()
     // Each time a new path block is found, it is added to escapeRoute and rightWall is changed. 
 
+    //Variable to store Step No. - for printing in loop
+    int stepNumber = 0;
 
     //While there are wall blocks in any direction around the player
     while (!mazeEscaped) {
@@ -207,8 +209,12 @@ std::vector<mcpp::Coordinate> Agent::findPath() {
             escapeRoute.push_back(currBlock);
             //Set lime carpet block
             mc.setBlock(currBlock, LIME_CARPET);
+            //Print current block step
+            std::cout << "Step[" << stepNumber + 1 << "]: (" << std::to_string(currBlock.x) << ", "
+                                                             << std::to_string(currBlock.y) << ", "
+                                                             << std::to_string(currBlock.z) << ")" << std::endl;
             //Time delay of 1 sec than change to air
-            std::this_thread::sleep_for(std::chrono::seconds(1));
+            std::this_thread::sleep_for(std::chrono::seconds(2));
             mc.setBlock(currBlock, air);
         }
         //Otherwise, a wall exists and we turn left
@@ -220,6 +226,7 @@ std::vector<mcpp::Coordinate> Agent::findPath() {
         }
         //Check if maze is solved
         mazeEscaped = endReached(currBlock);
+        ++stepNumber;
     }
 
     return escapeRoute;

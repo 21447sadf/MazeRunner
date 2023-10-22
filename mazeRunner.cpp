@@ -47,6 +47,7 @@ int main(void){
     States curState = ST_Main;
 
     int stateIndex = 0;
+    printStartText();
     printMainMenu();
 
     std::cin >> stateIndex;
