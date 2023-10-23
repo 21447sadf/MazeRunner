@@ -45,7 +45,7 @@ int main(void){
     Agent player(playerLoc);
 
     //Maze object
-    Maze maze;
+    Maze *maze = nullptr;
 
     std::vector<std::vector<char>> charMaze;
     
@@ -72,7 +72,7 @@ int main(void){
             std::cin.ignore(1000, '\n');
             std::string error_out;
             if (curState == ST_Main) {
-                if ((stateIndex < 1) ||(stateIndex > 5)) {  // INVALID INPUT ON MAIN MENU
+                if ((stateIndex < 1) ||(stateIndex > 5)) {  // NOT OUTPUTTING ERROR FOR INVALID INTS
                 std::cout << main_menu_Error << std::endl;
                 }
             }
@@ -100,13 +100,14 @@ int main(void){
                     //Generate maze 
                     charMaze = genMaze(mazeDimensions.first, mazeDimensions.second);
                     //Set maze object with parameters - IS THERE A BETTER WAY TO DO THIS?
-                    maze.setBasePoint(basePoint);
-                    maze.setXLength(mazeDimensions.first);
-                    maze.setZLength(mazeDimensions.second);
-                    maze.setMode(true);
-                    maze.setMazeOfCharacters(charMaze);
+                    maze = new Maze(basePoint, mazeDimensions.first, mazeDimensions.second, true, charMaze);
+                    // maze.setBasePoint(basePoint);
+                    // maze.setXLength(mazeDimensions.first);
+                    // maze.setZLength(mazeDimensions.second);
+                    // maze.setMode(true);
+                    // maze.setMazeOfCharacters(charMaze);
                     //Print maze in terminal
-                    maze.printMazeInTerminal();
+                    maze->printMazeInTerminal();
                 }
                 curState = ST_Main;
                 printMainMenu();
@@ -129,11 +130,11 @@ int main(void){
                 curState = ST_GenMaze;
             }
             else if (stateIndex == ST_GetMaze) {
-                std::cout << "Dummy message (Build Maze in MC)" << std::endl;
+                std::cout << "Building maze..." << std::endl;
                 //Flatten terrain in MC
-                maze.flattenTerrain(basePoint, charMaze.size(), charMaze.at(0).size());
+                maze->flattenAndStoreTerrain(basePoint, charMaze.size(), charMaze.at(0).size());
                 //Build maze in MC
-                maze.buildMazeInMC(charMaze);
+                maze->buildMazeInMC(charMaze);
                 curState = ST_Main;
                 printMainMenu();
             }
@@ -155,6 +156,7 @@ int main(void){
         }
         }
 
+    maze->undoMaze();
     printExitMassage();
 
 

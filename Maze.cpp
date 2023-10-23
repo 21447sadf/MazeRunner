@@ -26,30 +26,30 @@ Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen,
     this->mazeOfCharacters = charMaze;
 }
 
-//Set basePoint
-void Maze::setBasePoint(mcpp::Coordinate user_basePoint) {
-    this->basePoint = user_basePoint;
-}
+// //Set basePoint
+// void Maze::setBasePoint(mcpp::Coordinate user_basePoint) {
+//     this->basePoint = user_basePoint;
+// }
 
-//Set xlength 
-void Maze::setXLength(int user_xlength) {
-    this->xlength = user_xlength;
-}
+// //Set xlength 
+// void Maze::setXLength(int user_xlength) {
+//     this->xlength = user_xlength;
+// }
 
-//Set zlength
-void Maze::setZLength(int user_zlength) {
-    this->zlength = user_zlength;
-}
+// //Set zlength
+// void Maze::setZLength(int user_zlength) {
+//     this->zlength = user_zlength;
+// }
 
-//Set mode
-void Maze::setMode(bool user_mode) {
-    this->mode = user_mode;
-}
+// //Set mode
+// void Maze::setMode(bool user_mode) {
+//     this->mode = user_mode;
+// }
 
-//Set mazeOfCharacters
-void Maze::setMazeOfCharacters(std::vector<std::vector<char>> maze) {
-    this->mazeOfCharacters = maze;
-}
+// //Set mazeOfCharacters
+// void Maze::setMazeOfCharacters(std::vector<std::vector<char>> maze) {
+//     this->mazeOfCharacters = maze;
+// }
 
 //Build maze
 void Maze::buildMazeInMC(std::vector<std::vector<char>> mazeOfCharacters) {
@@ -59,7 +59,7 @@ void Maze::buildMazeInMC(std::vector<std::vector<char>> mazeOfCharacters) {
     mc.setPlayerPosition(basePoint + mcpp::Coordinate(0, 10, 0));
 
     //FLATTEN TERRAIN
-    flattenTerrain(basePoint, xlength, zlength);
+    flattenAndStoreTerrain(basePoint, xlength, zlength);
 
     //Build maze in MC - print each layer above the other
     //Set wall and air blocks
@@ -88,7 +88,7 @@ void Maze::buildMazeInMC(std::vector<std::vector<char>> mazeOfCharacters) {
     std::cout << "Success! Maze built in Minecraft" << std::endl;
 }
 
-void Maze::flattenTerrain (mcpp::Coordinate startPoint, int xLength, int zLength) {
+void Maze::flattenAndStoreTerrain (mcpp::Coordinate startPoint, int xLength, int zLength) {
     //Terrain is flattened by individually flattening the column at each x by z block:
 
     //Terrain coordinate
@@ -102,6 +102,8 @@ void Maze::flattenTerrain (mcpp::Coordinate startPoint, int xLength, int zLength
 
 
     for (int i = 0; i < xLength; i++) {
+        std::vector<mcpp::Coordinate> currRow(zLength);
+        originalTerrain.push_back(currRow);
         for (int j = 0; j < zLength; j++) {
             //Set coordinate for current terrain to check
             terrain = basePoint + mcpp::Coordinate(i, 0, j);
@@ -111,6 +113,9 @@ void Maze::flattenTerrain (mcpp::Coordinate startPoint, int xLength, int zLength
 
             //Set ground coordinate on current terrain
             terrain.y = terrainHeight;
+
+            //Store terrain coordinate in mazeTerrain
+            originalTerrain.at(i).at(j) = terrain;
 
             //Ground block of terrain to level
             mcpp::BlockType groundBlock = mc.getBlock(terrain);
@@ -130,6 +135,32 @@ void Maze::flattenTerrain (mcpp::Coordinate startPoint, int xLength, int zLength
         }
     }
 }
+
+//Function to undo maze in MC
+void Maze::undoMaze() {
+    mcpp::BlockType air(0);
+    for (int i = 3; i >= 0; i--) {
+        for (int x = 0; x < xlength; x++) {
+            for (int z = 0; z < zlength; z++) {
+                mc.setBlock(basePoint + mcpp::Coordinate(x, i, z), air);
+                // std::this_thread::sleep_for(std::chrono::seconds(1));
+            }
+        }
+    }
+}
+
+// void reverseTerrain(std::vector<std::vector<mcpp::Coordinate>> originalTerrain) {
+//     for (unsigned int i = 0; i < xLength; i++) {
+//         for (unsigned int j = 0; j < zLength; j++) {
+//             //Get original height of terrain 
+//             int origHeight = originalTerrain.at(i).at(j).y;
+
+//             int currHeight = mc.getHeight(basePoint + mcpp::Coordinate(x, 0, z));
+
+//             //If origHeight < 
+//         }
+//     }
+// }
 
 void Maze::printMazeInTerminal() {
     std::cout << "**Printing Maze**" << std::endl

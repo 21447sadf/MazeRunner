@@ -15,6 +15,7 @@ Agent::Agent(mcpp::Coordinate startLoc)
 }
 
 void Agent::orientPlayer() { 
+    playerLoc = mc.getPlayerPosition();
 
     //Coordinates to check around player
     mcpp::Coordinate x_plus = playerLoc + MOVE_XPLUS;
