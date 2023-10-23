@@ -1,10 +1,12 @@
 #include <iostream>
+#include <utility>
 
 // #include <mcpp/mcpp.h>
 
 #include "menuUtils.h"
 #include "Maze.h"
 #include "Agent.h"
+#include "getUserInput.h"
 
 
 #include "genMaze.h"
@@ -29,20 +31,29 @@ int main(void){
     mode += 0;
     //read Mode
 
-    
-
     mcpp::MinecraftConnection mc; 
     mc.doCommand("time set day"); 
 
     //Error messages
-    std::string main_menu_Error = "Invalid input. Please enter a number between 1 and 5"; //MAIN 
-    std::string sub_menu_Error = "Invalid input. Please enter number between 1 and 3";
+    std::string main_menu_Error = "Input Error: Enter a number between 1 and 5 ...."; //MAIN 
+    std::string sub_menu_Error = "Input Error: Enter a number between 1 and 3 ....";
 
     //Get player location
     mcpp::Coordinate playerLoc = mc.getPlayerPosition();
 
     //Agent Object
     Agent player(playerLoc);
+
+    //Maze object
+    Maze maze;
+
+    std::vector<std::vector<char>> charMaze;
+    
+    //Base point
+    mcpp::Coordinate basePoint;
+
+    //Maze dimensions 
+    std::pair<int, int> mazeDimensions;
 
     States curState = ST_Main;
 
@@ -82,18 +93,31 @@ int main(void){
                 }
                 else if (stateIndex == 2) {
                     std::cout << "You selected Generate Random Maze" << std::endl;
-                    std::vector<std::vector<char>> maze = genMaze();
+                    //Get basePoint of maze
+                    basePoint = getBasePoint();
+                    //Get maze dimensions (x, z)
+                    mazeDimensions = getMazeDimensions();
+                    //Generate maze 
+                    charMaze = genMaze(mazeDimensions.first, mazeDimensions.second);
+                    //Set maze object with parameters - IS THERE A BETTER WAY TO DO THIS?
+                    maze.setBasePoint(basePoint);
+                    maze.setXLength(mazeDimensions.first);
+                    maze.setZLength(mazeDimensions.second);
+                    maze.setMode(true);
+                    maze.setMazeOfCharacters(charMaze);
+                    //Print maze in terminal
+                    maze.printMazeInTerminal();
                 }
                 curState = ST_Main;
                 printMainMenu();
             }
             else if (curState == ST_SolveMaze) {
                 if (stateIndex == 1) {
-                    std::cout << "You selected Solve Manually" << std::endl;
+                    std::cout << "You selected Solve Manually" << std::endl; //TO DO: ADD CONDITION TO CHECK MAZE IS BUILT BEFORE SOLVING
                 }
                 else if (stateIndex == 2) {
-                    std::cout << "You selected Show Escape Route" << std::endl;
-                    std::vector<mcpp::Coordinate> route = player.findPath();
+                    std::cout << "You selected Show Escape Route" << std::endl; //TO DO: ADD CONDITION TO CHECK MAZE IS BUILT BEFORE SOLVING
+                    player.showEscapeRoute();
                 }
                 curState = ST_Main;
                 printMainMenu();
@@ -106,6 +130,10 @@ int main(void){
             }
             else if (stateIndex == ST_GetMaze) {
                 std::cout << "Dummy message (Build Maze in MC)" << std::endl;
+                //Flatten terrain in MC
+                maze.flattenTerrain(basePoint, charMaze.size(), charMaze.at(0).size());
+                //Build maze in MC
+                maze.buildMazeInMC(charMaze);
                 curState = ST_Main;
                 printMainMenu();
             }

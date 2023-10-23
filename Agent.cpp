@@ -1,6 +1,5 @@
 #include "Agent.h"
 #include <iostream>
-#include <vector>
 #include <thread>
 #include <chrono>
 #include <mcpp/mcpp.h>
@@ -172,9 +171,7 @@ bool Agent::endReached(mcpp::Coordinate currBlock) {
     return mazeSolved;
 }
 
-std::vector<mcpp::Coordinate> Agent::findPath() {
-    // //Initialise path to return
-    std::vector<mcpp::Coordinate> escapeRoute;
+void Agent::showEscapeRoute() {
 
     //Orient player
     orientPlayer();
@@ -205,8 +202,6 @@ std::vector<mcpp::Coordinate> Agent::findPath() {
         if (!isWallInFront(currBlock, agentdirection)) {
             //Move forward
             currBlock = advanceForward(currBlock, agentdirection);
-            //Add block to escapeRoute
-            escapeRoute.push_back(currBlock);
             //Set lime carpet block
             mc.setBlock(currBlock, LIME_CARPET);
             //Print current block step
@@ -229,7 +224,6 @@ std::vector<mcpp::Coordinate> Agent::findPath() {
         ++stepNumber;
     }
 
-    return escapeRoute;
 }
 
 Agent::~Agent()

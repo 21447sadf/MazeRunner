@@ -33,30 +33,19 @@ public:
     //Function to set player orientation
     void orientPlayer();
 
-    // std::vector<bool> wallsAroundBlock(mcpp::Coordinate &location);
-    // std::vector<mcpp::Coordinate> Agent::wallsAroundBlock(mcpp::Coordinate location);
-
-//    AgentOrientation findForwardDirection(mcpp::Coordinate currloc);
-
-//     mcpp::Coordinate moveForward(mcpp::Coordinate loc);
-
-//     void updateRightWall(mcpp::Coordinate loc, mcpp::Coordinate &rightWall);
-
     void turnRight(AgentOrientation &currDirection);
     mcpp::Coordinate advanceForward(mcpp::Coordinate currBlock, AgentOrientation currDirection);
     bool isWallInFront(mcpp::Coordinate currBlock, AgentOrientation orientation);
     bool isWallToRight(mcpp::Coordinate currBlock, AgentOrientation orientation);
     bool endReached(mcpp::Coordinate currBlock);
 
-    std::vector<mcpp::Coordinate> findPath();
+    void showEscapeRoute();
 
 private:
     /* data */
     mcpp::MinecraftConnection mc;
     mcpp::Coordinate playerLoc;
-    std::vector<mcpp::Coordinate> path;
     AgentOrientation agentdirection;
-    mcpp::Coordinate rightWall;
 
 };
 

@@ -165,7 +165,7 @@ return neighbors;
 }
 
 //Function to carve path through maze
-void buildMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<std::pair<int, int>> &path) {
+void carveMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<std::pair<int, int>> &path) {
     //Carve path on current cell
     maze.at(X).at(Z) = '.';
 
@@ -189,7 +189,7 @@ void buildMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<s
             nextZ = prevCell.first;
             nextX = prevCell.second;
             //RECURSIVE STEP: Call buildMaze on previous cell
-            buildMaze(maze, nextZ, nextX, path);
+            carveMaze(maze, nextZ, nextX, path);
         }
     }
     else {
@@ -225,66 +225,16 @@ void buildMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<s
             //Add cell to path of visited cells
             path.push_back(std::make_pair(nextZ, nextX));
             //RECURSIVE STEP: Call buildMaze on next cell
-            buildMaze(maze, nextZ, nextX, path);
+            carveMaze(maze, nextZ, nextX, path);
         }
     }
-}
+} 
 
 //Function to generate a random maze
-std::vector<std::vector<char>> genMaze(void) {
+std::vector<std::vector<char>> genMaze(int x_length, int z_length) {
 
     //Declare maze as 2D vector
     std::vector<std::vector<char>> maze;
-
-    //Declare inputs
-    int xPoint = 0;
-    int yPoint = 0;
-    int zPoint = 0;
-    int z_length = 0;
-    int x_length = 0;
-
-    //Loop variable
-    bool validInput = false;
-
-    // Loop to prompt+check base point input
-    std::cout << "Enter base point of maze" << std::endl;
-        while (!validInput) {
-        try {
-            if (!(std::cin >> xPoint) || !(std::cin >> yPoint) || !(std::cin >> zPoint)) {
-                throw std::invalid_argument("Invalid input. Please enter integers:");
-            }
-            else {
-                validInput = true;
-            }
-        }
-         catch (const std::exception& e) {
-            std::cerr << e.what() << std::endl;
-            std::cin.clear();  // Clear the error state
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear the input buffer
-        }
-    }
-
-    //Loop to prompt+check user length and width input
-    validInput = false;
-    std::cout << "Enter length (z) and width (x) of maze:" << std::endl;
-    while (!validInput) {
-        try {
-            if (!(std::cin >> z_length) || !(std::cin >> x_length)) {
-                throw std::invalid_argument("Invalid input. Please enter integers:");
-            }
-            else if ((z_length % 2 == 0) || (x_length % 2 == 0) || (z_length < 0) || (x_length < 0)) { //If inputs are even or negative
-                throw std::invalid_argument("Length and width values must be odd and positive. Please re-enter:");
-            }
-            else {
-                validInput = true;
-            }
-        }
-         catch (const std::exception& e) {
-            std::cerr << e.what() << std::endl;
-            std::cin.clear();  // Clear the error state
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear the input buffer
-        }
-    }
 
     //Initialise maze
     for (int i = 0; i < x_length; i++) {
@@ -318,25 +268,10 @@ std::vector<std::vector<char>> genMaze(void) {
     path.push_back(std::make_pair(startZ, startX));
 
     //Build maze
-    buildMaze(maze, startZ, startX, path);
+    carveMaze(maze, startZ, startX, path);
 
     //Output "Maze generated successfully" + Maze info
-    std::cout << "Maze generated successfully" << std::endl
-              << "**Printing Maze**" << std::endl
-              << "BasePoint: (" << xPoint << ", " << yPoint << ", " << zPoint << ")" << std::endl
-              << "Structure: " << std::endl;
-    
-    //Print generated maze
-    for (int i = 0; i < x_length; i++) {
-        std::vector<char> row(z_length);
-        for (unsigned int j = 0; j < row.size(); j++) {
-            std::cout << maze.at(i).at(j);
-        }
-        std::cout << std::endl;
-    }
-
-    //Print End message
-    std::cout << "**End Printing Maze**" << std::endl;
+    std::cout << "Maze generated successfully" << std::endl;
 
     return maze;
 }
