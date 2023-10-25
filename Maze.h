@@ -1,7 +1,6 @@
 #ifndef ASSIGN_MAZE_H
 #define ASSIGN_MAZE_H
 
-#include <vector>
 #include <mcpp/mcpp.h>
 
 class Maze
@@ -26,11 +25,13 @@ public:
     //build maze function
     void buildMazeInMC(std::vector<std::vector<char>> maze);
 
+    void saveTerrain();
+
     //Flatten and store current terrain function
-    void flattenAndStoreTerrain(mcpp::Coordinate basePoint, int xLength, int zLength);
+    void flattenTerrain ();
 
     //Function to undo maze in MC
-    void undoMaze();
+    void reverseTerrain();
 
     // void reverseTerrain(std::vector<std::vector<mcpp::Coordinate>> mazeTerrain);
 
@@ -46,7 +47,8 @@ private:
     mcpp::MinecraftConnection mc;
     int xlength;
     int zlength;
-    std::vector<std::vector<mcpp::Coordinate>> originalTerrain;
+    std::vector<std::vector<std::vector<mcpp::BlockType>>> originalTerrain; // TESTING
+    std::vector<std::vector<int>> heights;
     std::vector<std::vector<char>> mazeOfCharacters;
     //Set to normal mode (0) by default
     bool mode = 0;

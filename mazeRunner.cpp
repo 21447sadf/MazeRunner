@@ -25,6 +25,8 @@ enum States{
     ST_RandomMaze
 };
 
+//TO DO: ADD ERROR MESSAGES FOR INVALID INT INPUTS
+
 int main(void){
 
     bool mode = NORMAL_MODE;
@@ -131,8 +133,10 @@ int main(void){
             }
             else if (stateIndex == ST_GetMaze) {
                 std::cout << "Building maze..." << std::endl;
+                //Save current terrain 
+                maze->saveTerrain();
                 //Flatten terrain in MC
-                maze->flattenAndStoreTerrain(basePoint, charMaze.size(), charMaze.at(0).size());
+                maze->flattenTerrain();
                 //Build maze in MC
                 maze->buildMazeInMC(charMaze);
                 curState = ST_Main;
@@ -156,7 +160,7 @@ int main(void){
         }
         }
 
-    maze->undoMaze();
+    maze->reverseTerrain();
     printExitMassage();
 
 

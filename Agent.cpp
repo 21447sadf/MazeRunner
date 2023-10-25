@@ -115,16 +115,16 @@ bool Agent::isWallInFront(mcpp::Coordinate currBlock, AgentOrientation orientati
     //If orientation is X_PLUS
     if (orientation == X_PLUS) {
         //Check for wall on X + 1
-        isWall = (!(mc.getBlock(currBlock + MOVE_XPLUS) == air));
+        isWall = (mc.getBlock(currBlock + MOVE_XPLUS) == mcpp::Blocks::ACACIA_WOOD_PLANK);
     }
     else if (orientation == Z_PLUS) {
-        isWall = (!(mc.getBlock(currBlock + MOVE_ZPLUS) == air));
+        isWall = (mc.getBlock(currBlock + MOVE_ZPLUS) == mcpp::Blocks::ACACIA_WOOD_PLANK);
     }
     else if (orientation == X_MINUS) {
-        isWall = (!(mc.getBlock(currBlock + MOVE_XMINUS) == air));
+        isWall = (mc.getBlock(currBlock + MOVE_XMINUS) == mcpp::Blocks::ACACIA_WOOD_PLANK);
     }
     else if (orientation == Z_MINUS) {
-        isWall = (!(mc.getBlock(currBlock + MOVE_ZMINUS) == air));
+        isWall = (mc.getBlock(currBlock + MOVE_ZMINUS) == mcpp::Blocks::ACACIA_WOOD_PLANK);
     }
     return isWall;
 }
@@ -155,18 +155,18 @@ bool Agent::endReached(mcpp::Coordinate currBlock) {
     bool mazeSolved = true;
     mcpp::BlockType air(0);
     //Check if blocks in all 4 orientations are air
-    //If any are walls, mazeSolved is false
+    //If walls aren't ACACIA_WOOD_PLANK, mazeSolved is false
     // X + 1
-    if (!(mc.getBlock(currBlock + MOVE_XPLUS) == air)) {
+    if (mc.getBlock(currBlock + MOVE_XPLUS) == mcpp::Blocks::ACACIA_WOOD_PLANK) {
         mazeSolved = false;
     }
-    else if (!(mc.getBlock(currBlock + MOVE_ZPLUS) == air)) {
+    else if (mc.getBlock(currBlock + MOVE_ZPLUS) == mcpp::Blocks::ACACIA_WOOD_PLANK) {
         mazeSolved = false;
     }
-    else if (!(mc.getBlock(currBlock + MOVE_XMINUS) == air)) {
+    else if (mc.getBlock(currBlock + MOVE_XMINUS) == mcpp::Blocks::ACACIA_WOOD_PLANK) {
         mazeSolved = false;
     }
-    else if (!(mc.getBlock(currBlock + MOVE_ZMINUS) == air)) {
+    else if (mc.getBlock(currBlock + MOVE_ZMINUS) == mcpp::Blocks::ACACIA_WOOD_PLANK) {
         mazeSolved = false;
     }
     return mazeSolved;

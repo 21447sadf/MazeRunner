@@ -2,6 +2,8 @@
 #include <limits>
 #include <mcpp/mcpp.h>
 
+//TO DO: ADD CONSTRAINT - MAZE DIMENSIONS MUST BE MIN (3, 3) AND MAX (99, 99)
+
 //Function to get start point from user
 mcpp::Coordinate getBasePoint(void) {
     //Declare inputs
