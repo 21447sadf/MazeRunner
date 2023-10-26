@@ -45,14 +45,17 @@ std::pair<int, int> getMazeDimensions(void) {
 
     //Loop to prompt+check user length and width input
     bool validInput = false;
-    std::cout << "Enter length (z) and width (x) of maze:" << std::endl;
+    std::cout << "Enter length and width of maze:" << std::endl;
     while (!validInput) {
         try {
             if (!(std::cin >> z_length) || !(std::cin >> x_length)) {
                 throw std::invalid_argument("Invalid input. Please enter integers:");
             }
-            else if ((z_length % 2 == 0) || (x_length % 2 == 0) || (z_length < 0) || (x_length < 0)) { //If inputs are even or negative
-                throw std::invalid_argument("Length and width values must be odd and positive. Please re-enter:");
+            else if ((z_length % 2 == 0) || (x_length % 2 == 0)) { //If inputs are even
+                throw std::invalid_argument("Dimensions must be odd and positive. Please re-enter:");
+            }
+            else if ((z_length < 3) || (x_length > 99)) {
+                throw std::invalid_argument("Dimensions exceed allowable limits (3-99). Please re-enter:");
             }
             else {
                 validInput = true;
@@ -66,4 +69,24 @@ std::pair<int, int> getMazeDimensions(void) {
     }
 
     return std::make_pair(x_length, z_length);
+}
+
+void printMazeInTerminal(std::vector<std::vector<char>> charMaze, int x, int y, int z) {
+    int xlength = charMaze.size();
+    int zlength = charMaze.at(0).size();
+    std::cout << "**Printing Maze**" << std::endl
+              << "BasePoint: (" << x << ", " 
+                                << y << ", " 
+                                << z << ")" << std::endl
+              << "Structure: " << std::endl;
+    //Print generated maze
+    for (int i = 0; i < xlength; i++) {
+        for (int j = 0; j < zlength; j++) {
+            std::cout << charMaze.at(i).at(j);
+        }
+        std::cout << std::endl;
+    }
+
+    //Print End message
+    std::cout << "**End Printing Maze**" << std::endl;
 }

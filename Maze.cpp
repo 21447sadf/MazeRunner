@@ -15,19 +15,17 @@ Maze::Maze() {
 //Overloaded constructor
 Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen, 
                                     unsigned int zlen,
-                                    bool mode
-                                    , std::vector<std::vector<char>> charMaze)
+                                    bool mode)
 {
     //Set basePoint
     this->basePoint = basePoint;
     this->xlength = xlen;
     this->zlength = zlen;
     this->mode = mode;
-    this->mazeOfCharacters = charMaze;
 }
 
 //Build maze
-void Maze::buildMazeInMC(std::vector<std::vector<char>> mazeOfCharacters) { //DONE
+void Maze::buildMazeInMC(std::vector<std::vector<char>> charMaze) { 
 
     //TP to 10 units above basepoint:
     mc.setPlayerPosition(basePoint + mcpp::Coordinate(0, 10, 0));
@@ -40,13 +38,13 @@ void Maze::buildMazeInMC(std::vector<std::vector<char>> mazeOfCharacters) { //DO
     for (int x = 0; x < xlength; x++) {
         for (int z = 0; z < zlength; z++) {
             //If maze char is a wall
-            if (mazeOfCharacters.at(x).at(z) == 'x') {
+            if (charMaze.at(x).at(z) == 'x') {
                 //Set three MC blocks for wall
                 mc.setBlocks(basePoint + mcpp::Coordinate(x, 0, z),
                              basePoint + mcpp::Coordinate(x, 2, z), WALL);
             }
             //Otherwise set three air blocks for path
-            else if (mazeOfCharacters.at(x).at(z) == '.') {
+            else if (charMaze.at(x).at(z) == '.') {
                 mc.setBlocks(basePoint + mcpp::Coordinate(x, 0, z), 
                             basePoint + mcpp::Coordinate(x, 2, z), AIR);
             }
@@ -122,24 +120,6 @@ void Maze::reverseTerrain() {
             std::this_thread::sleep_for(std::chrono::milliseconds(50)); // Delay for 50 milliseconds
         }
     }
-}
-
-void Maze::printMazeInTerminal() {
-    std::cout << "**Printing Maze**" << std::endl
-              << "BasePoint: (" << std::to_string(basePoint.x) << ", " 
-                                << std::to_string(basePoint.y) << ", " 
-                                << std::to_string(basePoint.z) << ")" << std::endl
-              << "Structure: " << std::endl;
-    //Print generated maze
-    for (int i = 0; i < xlength; i++) {
-        for (int j = 0; j < zlength; j++) {
-            std::cout << mazeOfCharacters.at(i).at(j);
-        }
-        std::cout << std::endl;
-    }
-
-    //Print End message
-    std::cout << "**End Printing Maze**" << std::endl;
 }
 
 Maze::~Maze()

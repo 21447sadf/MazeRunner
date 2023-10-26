@@ -13,8 +13,7 @@ public:
     //Overloaded constructor
     Maze(mcpp::Coordinate basePoint, unsigned int xlen, 
                                         unsigned int zlen,
-                                        bool mode
-                                        , std::vector<std::vector<char>> charMaze);
+                                        bool mode);
     //Set functions
     // void setBasePoint(mcpp::Coordinate user_basePoint);
     // void setXLength(int user_xlength);
@@ -23,7 +22,7 @@ public:
     // void setMazeOfCharacters(std::vector<std::vector<char>> maze);
 
     //build maze function
-    void buildMazeInMC(std::vector<std::vector<char>> maze);
+    void buildMazeInMC(std::vector<std::vector<char>> charMaze);
 
     void saveTerrain();
 
@@ -32,11 +31,6 @@ public:
 
     //Function to undo maze in MC
     void reverseTerrain();
-
-    // void reverseTerrain(std::vector<std::vector<mcpp::Coordinate>> mazeTerrain);
-
-    //Print maze function
-    void printMazeInTerminal();
     
     //Destructor 
     ~Maze();
@@ -47,9 +41,7 @@ private:
     mcpp::MinecraftConnection mc;
     int xlength;
     int zlength;
-    std::vector<std::vector<std::vector<mcpp::BlockType>>> originalTerrain; // TESTING
     std::vector<std::vector<int>> heights;
-    std::vector<std::vector<char>> mazeOfCharacters;
     //Set to normal mode (0) by default
     bool mode = 0;
 };

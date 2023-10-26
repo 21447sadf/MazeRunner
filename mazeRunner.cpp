@@ -46,8 +46,11 @@ int main(void){
     //Agent Object
     Agent player(playerLoc);
 
-    //Maze object
+    // //Maze object
     Maze *maze = nullptr;
+
+    // bool mazeBuilt = false;
+    bool mazeGenerated = false;
 
     std::vector<std::vector<char>> charMaze;
     
@@ -92,24 +95,18 @@ int main(void){
             if (curState == ST_GenMaze) {
                 if (stateIndex == 1) {
                     std::cout << "You selected Read Maze from Terminal" << std::endl;
+
                 }
                 else if (stateIndex == 2) {
-                    std::cout << "You selected Generate Random Maze" << std::endl;
                     //Get basePoint of maze
                     basePoint = getBasePoint();
                     //Get maze dimensions (x, z)
                     mazeDimensions = getMazeDimensions();
                     //Generate maze 
                     charMaze = genMaze(mazeDimensions.first, mazeDimensions.second);
-                    //Set maze object with parameters - IS THERE A BETTER WAY TO DO THIS?
-                    maze = new Maze(basePoint, mazeDimensions.first, mazeDimensions.second, true, charMaze);
-                    // maze.setBasePoint(basePoint);
-                    // maze.setXLength(mazeDimensions.first);
-                    // maze.setZLength(mazeDimensions.second);
-                    // maze.setMode(true);
-                    // maze.setMazeOfCharacters(charMaze);
                     //Print maze in terminal
-                    maze->printMazeInTerminal();
+                    printMazeInTerminal(charMaze, basePoint.x, basePoint.y, basePoint.z);
+                    mazeGenerated = true;
                 }
                 curState = ST_Main;
                 printMainMenu();
@@ -132,13 +129,35 @@ int main(void){
                 curState = ST_GenMaze;
             }
             else if (stateIndex == ST_GetMaze) {
-                std::cout << "Building maze..." << std::endl;
-                //Save current terrain 
-                maze->saveTerrain();
-                //Flatten terrain in MC
-                maze->flattenTerrain();
-                //Build maze in MC
-                maze->buildMazeInMC(charMaze);
+                //Maze already exists in MC
+                if ((maze != nullptr) && (mazeGenerated)) {
+                    std::cout << "Building maze..." << std::endl;
+                    maze->reverseTerrain();
+                    maze = new Maze(basePoint, mazeDimensions.first, mazeDimensions.second, true);
+                    //Save current terrain 
+                    maze->saveTerrain();
+                    //Flatten terrain in MC
+                    maze->flattenTerrain();
+                    //Build maze in MC
+                    maze->buildMazeInMC(charMaze);
+                    mazeGenerated = false;
+                }
+                //Maze doesnt exist in MC
+                else if ((maze == nullptr) && (mazeGenerated)){
+                    std::cout << "Building maze..." << std::endl;
+                    maze = new Maze(basePoint, mazeDimensions.first, mazeDimensions.second, true);
+                    //Save current terrain 
+                    maze->saveTerrain();
+                    //Flatten terrain in MC
+                    maze->flattenTerrain();
+                    //Build maze in MC
+                    maze->buildMazeInMC(charMaze);
+                    mazeGenerated = false;
+                }
+                //Maze hasn't been generated
+                else {
+                    std::cout << "Maze undefined! Generate a maze before building." << std::endl;
+                }
                 curState = ST_Main;
                 printMainMenu();
             }
@@ -161,6 +180,7 @@ int main(void){
         }
 
     maze->reverseTerrain();
+    delete maze;
     printExitMassage();
 
 
