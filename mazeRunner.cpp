@@ -1,5 +1,6 @@
 #include <iostream>
 #include <utility>
+#include <cstring>
 
 // #include <mcpp/mcpp.h>
 
@@ -27,11 +28,18 @@ enum States{
 
 //TO DO: ADD ERROR MESSAGES FOR INVALID INT INPUTS
 
-int main(void){
+int main(int numParams, char* arguments[]){
 
     bool mode = NORMAL_MODE;
     mode += 0;
     //read Mode
+    for (int i = 1; i < numParams; i++) {
+        if (std::strcmp(arguments[i], "-testMode") == 0) {
+            mode = TESTING_MODE;
+            std::cout << "PROGRAM IS IN TESTING MODE" << std::endl;
+            i = numParams;
+        }
+    }
 
     mcpp::MinecraftConnection mc; 
     mc.doCommand("time set day"); 
