@@ -31,7 +31,6 @@ enum States{
 int main(int numParams, char* arguments[]){
 
     bool mode = NORMAL_MODE;
-    mode += 0;
     //read Mode
     for (int i = 1; i < numParams; i++) {
         if (std::strcmp(arguments[i], "-testMode") == 0) {
@@ -110,7 +109,7 @@ int main(int numParams, char* arguments[]){
                     //Get maze dimensions (x, z)
                     mazeDimensions = getMazeDimensions();
                     //Generate maze 
-                    charMaze = genMaze(mazeDimensions.first, mazeDimensions.second);
+                    charMaze = genMaze(mazeDimensions.first, mazeDimensions.second, mode);
                     //Print maze in terminal
                     printMazeInTerminal(charMaze, basePoint.x, basePoint.y, basePoint.z);
                     mazeGenerated = true;
@@ -123,7 +122,7 @@ int main(int numParams, char* arguments[]){
                     std::cout << "You selected Solve Manually" << std::endl; //TO DO: ADD CONDITION TO CHECK MAZE IS BUILT BEFORE SOLVING
                 }
                 else if (stateIndex == 2) {
-                    std::cout << "You selected Show Escape Route" << std::endl; //TO DO: ADD CONDITION TO CHECK MAZE IS BUILT BEFORE SOLVING
+                    //TO DO: ADD CONDITION TO CHECK MAZE IS BUILT BEFORE SOLVING
                     player.showEscapeRoute();
                 }
                 curState = ST_Main;

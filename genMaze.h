@@ -23,7 +23,10 @@ int generateRandomOddNumber(int min, int max) {
 }
 
 //Function to set start point of maze
-std::pair<int, int> setStartingPoint(std::vector<std::vector<char>> &inputMaze) {
+std::pair<int, int> setStartingPoint(std::vector<std::vector<char>> &inputMaze, bool mode) {
+    if (mode == 1) {
+        return std::make_pair(1, 1);
+    }
     //Start point variable
     std::pair<int, int> startPoint;
 
@@ -113,23 +116,29 @@ bool isValid(std::vector<std::vector<char>> &inputMaze, int Z_Coord, int X_Coord
 }
 
 //Function to create maze entrance
-void createEntrance(std::vector<std::vector<char>> &inputMaze, int startZ, int startX) {
+void createEntrance(std::vector<std::vector<char>> &inputMaze, int startZ, int startX, bool mode) {
     //Set rows and columns
     int rows = inputMaze.size();
     int columns = inputMaze.at(0).size();
 
-    //If start position is at:
-    if ((startZ + 2) == columns) { //Right wall
-        inputMaze.at(startX).at(startZ + 1) = '.';
+    if (mode == 0) { //NORMAL MODE
+        //If start position is at:
+        if ((startZ + 2) == columns) { //Right wall
+            inputMaze.at(startX).at(startZ + 1) = '.';
+        }
+        else if (startZ == 1) { // Left wall
+            inputMaze.at(startX).at(0) = '.';
+        }
+        else if (startX == 1) {//T Top wall
+            inputMaze.at(0).at(startZ) = '.';
+        }
+        else if (startX + 2 == rows) {// Bottom wall
+            inputMaze.at(startX + 1).at(startZ) = '.';
+        }
+
     }
-    else if (startZ == 1) { // Left wall
-        inputMaze.at(startX).at(0) = '.';
-    }
-    else if (startX == 1) {//T Top wall
-        inputMaze.at(0).at(startZ) = '.';
-    }
-    else if (startX + 2 == rows) {// Bottom wall
-        inputMaze.at(startX + 1).at(startZ) = '.';
+    else if (mode == 1) { //TEST MODE
+        inputMaze.at(1).at(0) = '.';
     }
 }
 
@@ -165,7 +174,7 @@ return neighbors;
 }
 
 //Function to carve path through maze
-void carveMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<std::pair<int, int>> &path) {
+void carveMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<std::pair<int, int>> &path, bool mode) {
     //Carve path on current cell
     maze.at(X).at(Z) = '.';
 
@@ -177,7 +186,12 @@ void carveMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<s
     std::vector<std::pair<int, int>> unvisitedneighbors = unvisitedNeighbors(maze, Z, X);
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::shuffle(unvisitedneighbors.begin(), unvisitedneighbors.end(), gen);
+
+    //NORMAL MODE - Shuffle to change order of directions
+    if (mode == 0) {  
+        std::shuffle(unvisitedneighbors.begin(), unvisitedneighbors.end(), gen);
+    }
+    //TEST MODE - Do nothing, neighbors are in order UP, RIGHT, DOWN, LEFT
 
     // BASE CASE: No unvisited neighbors and path isn't empty
     if (unvisitedneighbors.empty() && !path.empty()) { 
@@ -189,7 +203,7 @@ void carveMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<s
             nextZ = prevCell.first;
             nextX = prevCell.second;
             //RECURSIVE STEP: Call buildMaze on previous cell
-            carveMaze(maze, nextZ, nextX, path);
+            carveMaze(maze, nextZ, nextX, path, mode);
         }
     }
     else {
@@ -225,13 +239,13 @@ void carveMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<s
             //Add cell to path of visited cells
             path.push_back(std::make_pair(nextZ, nextX));
             //RECURSIVE STEP: Call buildMaze on next cell
-            carveMaze(maze, nextZ, nextX, path);
+            carveMaze(maze, nextZ, nextX, path, mode);
         }
     }
 } 
 
 //Function to generate a random maze
-std::vector<std::vector<char>> genMaze(int x_length, int z_length) {
+std::vector<std::vector<char>> genMaze(int x_length, int z_length, bool mode) {
 
     //Declare maze as 2D vector
     std::vector<std::vector<char>> maze;
@@ -255,20 +269,20 @@ std::vector<std::vector<char>> genMaze(int x_length, int z_length) {
     }
 
     // Set starting point
-    std::pair<int, int> startPoint = setStartingPoint(maze);
+    std::pair<int, int> startPoint = setStartingPoint(maze, mode);
 
     int startZ = startPoint.first;
     int startX = startPoint.second;
 
     //Set maze entrance
-    createEntrance(maze, startZ, startX);
+    createEntrance(maze, startZ, startX, mode);
 
     //Initialise path and add start point
     std::vector<std::pair<int, int>> path;
     path.push_back(std::make_pair(startZ, startX));
 
     //Build maze
-    carveMaze(maze, startZ, startX, path);
+    carveMaze(maze, startZ, startX, path, mode);
 
     //Output "Maze generated successfully" + Maze info
     std::cout << "Maze generated successfully" << std::endl;
