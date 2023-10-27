@@ -4,14 +4,14 @@
 #include <chrono>
 #include <mcpp/mcpp.h>
 
-Agent::Agent(mcpp::Coordinate startLoc)
+Agent::Agent(mcpp::Coordinate startLoc, bool mode)
 {
     this->playerLoc = startLoc;
     this->playerLoc.x = startLoc.x;
     this->playerLoc.y = startLoc.y;
     this->playerLoc.z = startLoc.z;
     mc.setPlayerPosition(this->playerLoc);
-    
+    this->mode = mode;
 }
 
 void Agent::orientPlayer() { 
@@ -73,16 +73,24 @@ void Agent::orientPlayer() {
     mcpp::Coordinate checkDir = directions[i];
     std::string command = commands[i];
 
-
-    for (i = 0; i < 4; i++) {
-        checkDir = directions[i];
-        command = commands[i];
-        if (!(mc.getBlock(checkDir) == air)) {
-            mc.doCommand(command);
+    if (mode == 0) {
+        for (i = 0; i < 4; i++) {
+            checkDir = directions[i];
+            command = commands[i];
+            if (!(mc.getBlock(checkDir) == air)) {
+                mc.doCommand(command);
+            }
+            ++i;
+            turnRight(startOrientation);
         }
-        ++i;
-        turnRight(startOrientation);
-        std::cout << startOrientation << std::endl;
+    }
+    else if (mode == 1) {
+        //Face negative z axis:
+        mc.doCommand(X_PLUS_COMMAND);
+        startOrientation = Z_MINUS;
+        while (!isWallToRight(playerLoc, startOrientation)) {
+            turnRight(startOrientation);
+        }
     }
 }
 

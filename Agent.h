@@ -27,7 +27,7 @@ class Agent
 
 public:
     //Constructor gets player's current location
-    Agent(mcpp::Coordinate startLoc);
+    Agent(mcpp::Coordinate startLoc, bool mode);
     ~Agent();
 
     //Function to set player orientation
@@ -46,7 +46,7 @@ private:
     mcpp::MinecraftConnection mc;
     mcpp::Coordinate playerLoc;
     AgentOrientation agentdirection;
-
+    bool mode;
 };
 
 

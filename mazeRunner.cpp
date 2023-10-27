@@ -36,7 +36,6 @@ int main(int numParams, char* arguments[]){
     for (int i = 1; i < numParams; i++) {
         if (std::strcmp(arguments[i], "-testMode") == 0) {
             mode = TESTING_MODE;
-            std::cout << "PROGRAM IS IN TESTING MODE" << std::endl;
             i = numParams;
         }
     }
@@ -52,7 +51,7 @@ int main(int numParams, char* arguments[]){
     mcpp::Coordinate playerLoc = mc.getPlayerPosition();
 
     //Agent Object
-    Agent player(playerLoc);
+    Agent player(playerLoc, mode);
 
     // //Maze object
     Maze *maze = nullptr;
