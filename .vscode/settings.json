@@ -1,7 +1,4 @@
 {
-<<<<<<< HEAD
-    "C_Cpp.errorSquiggles": "disabled"
-=======
     "files.associations": {
         "array": "cpp",
         "atomic": "cpp",
@@ -49,5 +46,4 @@
         "streambuf": "cpp",
         "typeinfo": "cpp"
     }
->>>>>>> origin/Sadf---Main-Menu
 }
