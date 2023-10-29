@@ -1,6 +1,8 @@
 #include <iostream>
+#include <utility>
+#include <cstring>
 
-#include <mcpp/mcpp.h>
+// #include <mcpp/mcpp.h>
 
 #include "menuUtils.h"
 #include "Maze.h"
@@ -10,19 +12,28 @@
 #include "solveManually.h"
 
 #include <limits>
+#include "getUserInput.h"
+
+
+#include "genMaze.h"
+
 
 #define NORMAL_MODE 0
 #define TESTING_MODE 1
 
 enum States{
     ST_Main,
-    ST_GetMaze,
-    ST_SolveMaze,
-    ST_Creators,
-    ST_Exit
+    ST_GenMaze, //Generate Maze menu - 1 ADDED BY ME
+    ST_GetMaze, //Dummy message  - 2
+    ST_SolveMaze, //Solve maze menu - 3
+    ST_Creators, //Team info - 4
+    ST_Exit,      // Exit message - 5 
+    ST_RandomMaze
 };
 
-int main(void){
+//TO DO: ADD ERROR MESSAGES FOR INVALID INT INPUTS
+
+int main(int numParams, char* arguments[]){
 
     // bool mode = NORMAL_MODE;
     //read Mode
@@ -31,9 +42,39 @@ int main(void){
     bool mazeGenerated = false;
     bool mazeBuilt = false;
     bool solveMan = false;
+    for (int i = 1; i < numParams; i++) {
+        if (std::strcmp(arguments[i], "-testMode") == 0) {
+            mode = TESTING_MODE;
+            i = numParams;
+        }
+    }
 
     // mcpp::MinecraftConnection mc; 
     // mc.doCommand("time set day"); 
+
+    //Error messages
+    std::string main_menu_Error = "Input Error: Enter a number between 1 and 5 ...."; //MAIN 
+    std::string sub_menu_Error = "Input Error: Enter a number between 1 and 3 ....";
+
+    //Get player location
+    mcpp::Coordinate playerLoc = mc.getPlayerPosition();
+
+    //Agent Object
+    Agent player(playerLoc, mode);
+
+    // //Maze object
+    Maze *maze = nullptr;
+
+    // bool mazeBuilt = false;
+    bool mazeGenerated = false;
+
+    std::vector<std::vector<char>> charMaze;
+    
+    //Base point
+    mcpp::Coordinate basePoint;
+
+    //Maze dimensions 
+    std::pair<int, int> mazeDimensions;
 
     States curState = ST_Main;
     
@@ -42,6 +83,12 @@ int main(void){
     // Opening Menu
     printStartText();
 
+    int stateIndex = 0;
+    printStartText();
+    printMainMenu();
+
+    std::cin >> stateIndex;
+    
     //State machine for menu        
     while (curState != ST_Exit)
     {
