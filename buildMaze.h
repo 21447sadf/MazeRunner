@@ -11,6 +11,7 @@
 #include <thread>
 
 // Declare the function prototype
+void saveOrigBlocks(int build_x, int build_y, int build_z, int envLength, int envWidth);
 void executeBuildMaze(int build_x, int build_y, int build_z, int envLength, int envWidth, const std::vector<std::vector<char>>& envStructure);
 void reverseBuildMaze(int build_x, int build_y, int build_z, int envLength, int envWidth);
 

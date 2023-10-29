@@ -7,6 +7,7 @@
 #include "Agent.h"
 #include "readMaze.h"
 #include "buildMaze.h"
+#include "solveManually.h"
 
 #include <limits>
 
@@ -18,8 +19,7 @@ enum States{
     ST_GetMaze,
     ST_SolveMaze,
     ST_Creators,
-    ST_Exit,
-    ST_RandomMaze  //Random Maze enumerator
+    ST_Exit
 };
 
 int main(void){
@@ -30,6 +30,7 @@ int main(void){
     int option;
     bool mazeGenerated = false;
     bool mazeBuilt = false;
+    bool solveMan = false;
 
     // mcpp::MinecraftConnection mc; 
     // mc.doCommand("time set day"); 
@@ -57,23 +58,19 @@ int main(void){
                 // Do Read Maze from terminal
                 rm.executeReadMaze();
                 mazeGenerated = true;
-                // std::cout << std::endl;
-                // std::cout << "OPTION 1 [Read Maze from terminal] WAS SUCCESSFULLY EXECUTED";
-                // std::cout << std::endl;
             }
             else if (option == 2) {
                 // Do Generate Random Maze
-                
-                std::cout << std::endl;
-                std::cout << "OPTION 2 [Generate Random Maze] WAS SUCCESSFULLY EXECUTED";
-                std::cout << std::endl;
+                // std::cout << std::endl;
+                // std::cout << "OPTION 2 [Generate Random Maze] WAS SUCCESSFULLY EXECUTED";
+                // std::cout << std::endl;
             }
             else if (option == 3) {
                 // Do Back (Return to Main Menu)
                 curState = ST_Main;
-                std::cout << std::endl;
-                std::cout << "OPTION 3 [Back] WAS SUCCESSFUL EXECUTED";
-                std::cout << std::endl;
+                // std::cout << std::endl;
+                // std::cout << "OPTION 3 [Back] WAS SUCCESSFUL EXECUTED";
+                // std::cout << std::endl;
             }
             else {
                 std::cout << std::endl;
@@ -88,6 +85,7 @@ int main(void){
         else if (option == 2) {
             //Do Build Maze in MineCraft
             if (mazeGenerated && !mazeBuilt) {
+                saveOrigBlocks(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth());
                 executeBuildMaze(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth(), rm.getEnvStructure());
                 mazeBuilt = true;
             }
@@ -99,9 +97,6 @@ int main(void){
             else {
                 std::cout << "Maze not defined! Generate maze before Building." << std::endl;
             }
-            // std::cout << std::endl;
-            // std::cout << "OPTION 2 [BUILD MAZE] WAS SUCCESSFUL EXECUTED";
-            // std::cout << std::endl;
         }
 
         // Solve Maze Menu
@@ -111,22 +106,31 @@ int main(void){
             printSolveMazeMenu();
             std::cin >> option;
             if (option == 1) {
-                // Do Solve Manually
-                std::cout << std::endl;
-                std::cout << "OPTION 1 [Solve Manually] WAS SUCCESSFULLY EXECUTED";
-                std::cout << std::endl;
+                if (mazeBuilt) {
+                    // Do Solve Manually
+                    executeSolveManually(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth(), rm.getEnvStructure());
+                    solveMan = true;
+                }
+                else {
+                    std::cout << "Build Maze before solving..." << std::endl;
+                }
             }
             else if (option == 2) {
                 // Do Show Escape Route
-                std::cout << std::endl;
-                std::cout << "OPTION 2 [Show Escape Route] WAS SUCCESSFULLY EXECUTED";
-                std::cout << std::endl;
+                if (solveMan) {
+                    std::cout << std::endl;
+                    std::cout << "OPTION 2 [Show Escape Route] WAS SUCCESSFULLY EXECUTED";
+                    std::cout << std::endl;
+                }
+                else {
+                    std::cout << "Initialize player using Solve manually." << std::endl;
+                }
             }
             else if (option == 3) {
                 // Do Back (Return to Main Menu)
-                std::cout << std::endl;
-                std::cout << "OPTION 3 [Back] WAS SUCCESSFUL EXECUTED";
-                std::cout << std::endl;
+                // std::cout << std::endl;
+                // std::cout << "OPTION 3 [Back] WAS SUCCESSFUL EXECUTED";
+                // std::cout << std::endl;
                 curState = ST_Main;
             }
             else {
@@ -164,13 +168,13 @@ int main(void){
     }
 
     // Do Minecraft Reversal Here
-
+    if (mazeBuilt) {
+        reverseBuildMaze(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth());
+    }
     // Print Exit Message
     printExitMassage();
 
 
     return EXIT_SUCCESS;
-
-    //State machine for RandomMaze
 
 }
