@@ -2,7 +2,7 @@
 #include <utility>
 #include <cstring>
 
-// #include <mcpp/mcpp.h>
+#include <mcpp/mcpp.h>
 
 #include "menuUtils.h"
 #include "Maze.h"
@@ -23,7 +23,7 @@
 
 enum States{
     ST_Main,
-    ST_GenMaze, //Generate Maze menu - 1 ADDED BY ME
+    ST_GenMaze, //Generate Maze menu - 1
     ST_GetMaze, //Dummy message  - 2
     ST_SolveMaze, //Solve maze menu - 3
     ST_Creators, //Team info - 4
@@ -31,63 +31,40 @@ enum States{
     ST_RandomMaze
 };
 
-//TO DO: ADD ERROR MESSAGES FOR INVALID INT INPUTS
-
 int main(int numParams, char* arguments[]){
 
-    // bool mode = NORMAL_MODE;
+    bool mode = NORMAL_MODE;
     //read Mode
-
-    int option;
-    bool mazeGenerated = false;
-    bool mazeBuilt = false;
-    bool solveMan = false;
     for (int i = 1; i < numParams; i++) {
         if (std::strcmp(arguments[i], "-testMode") == 0) {
             mode = TESTING_MODE;
-            i = numParams;
         }
     }
 
-    // mcpp::MinecraftConnection mc; 
-    // mc.doCommand("time set day"); 
-
-    //Error messages
-    std::string main_menu_Error = "Input Error: Enter a number between 1 and 5 ...."; //MAIN 
-    std::string sub_menu_Error = "Input Error: Enter a number between 1 and 3 ....";
+    mcpp::MinecraftConnection mc; 
+    mc.doCommand("time set day"); 
 
     //Get player location
     mcpp::Coordinate playerLoc = mc.getPlayerPosition();
 
-    //Agent Object
+    //Agent, Maze and readMaze objects
     Agent player(playerLoc, mode);
+    Maze maze;
+    readMaze rm;
 
-    // //Maze object
-    Maze *maze = nullptr;
-
-    // bool mazeBuilt = false;
+    bool mazeBuilt = false;
     bool mazeGenerated = false;
+    bool solveMan = false;
 
+    //Maze parameters
     std::vector<std::vector<char>> charMaze;
-    
-    //Base point
     mcpp::Coordinate basePoint;
-
-    //Maze dimensions 
     std::pair<int, int> mazeDimensions;
 
     States curState = ST_Main;
-    
-    readMaze rm;
+    int option;
 
-    // Opening Menu
     printStartText();
-
-    int stateIndex = 0;
-    printStartText();
-    printMainMenu();
-
-    std::cin >> stateIndex;
     
     //State machine for menu        
     while (curState != ST_Exit)
@@ -104,20 +81,21 @@ int main(int numParams, char* arguments[]){
             if (option == 1) {
                 // Do Read Maze from terminal
                 rm.executeReadMaze();
+                basePoint = mcpp::Coordinate(rm.getX(), rm.getY(), rm.getZ());
+                mazeDimensions = std::make_pair(rm.getLength(), rm.getWidth());
+                charMaze = rm.getEnvStructure();
                 mazeGenerated = true;
             }
             else if (option == 2) {
-                // Do Generate Random Maze
-                // std::cout << std::endl;
-                // std::cout << "OPTION 2 [Generate Random Maze] WAS SUCCESSFULLY EXECUTED";
-                // std::cout << std::endl;
+                basePoint = getBasePoint();
+                mazeDimensions = getMazeDimensions();
+                charMaze = genMaze(mazeDimensions.first, mazeDimensions.second, mode);
+                printMazeInTerminal(charMaze, basePoint.x, basePoint.y, basePoint.z);
+                mazeGenerated = true;
             }
             else if (option == 3) {
                 // Do Back (Return to Main Menu)
                 curState = ST_Main;
-                // std::cout << std::endl;
-                // std::cout << "OPTION 3 [Back] WAS SUCCESSFUL EXECUTED";
-                // std::cout << std::endl;
             }
             else {
                 std::cout << std::endl;
@@ -131,18 +109,23 @@ int main(int numParams, char* arguments[]){
         // Build Maze 
         else if (option == 2) {
             //Do Build Maze in MineCraft
+            // Maze generated but not built
             if (mazeGenerated && !mazeBuilt) {
-                saveOrigBlocks(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth());
-                executeBuildMaze(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth(), rm.getEnvStructure());
+                maze.setMazeParameters(basePoint, mazeDimensions.first, mazeDimensions.second);
+                maze.buildMazeInMC(charMaze);
+                mazeGenerated = false;
                 mazeBuilt = true;
-            }
+                }
+            // Maze generated and built
             else if (mazeGenerated && mazeBuilt) {
-                reverseBuildMaze(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth());
-                executeBuildMaze(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth(), rm.getEnvStructure());
+                maze.reverseTerrain();
+                maze.setMazeParameters(basePoint, mazeDimensions.first, mazeDimensions.second);
+                maze.buildMazeInMC(charMaze);
+                mazeGenerated = false;
                 mazeBuilt = true;
             }
             else {
-                std::cout << "Maze not defined! Generate maze before Building." << std::endl;
+                std::cout << "Maze not defined! Generate maze before building." << std::endl;
             }
         }
 
@@ -154,8 +137,8 @@ int main(int numParams, char* arguments[]){
             std::cin >> option;
             if (option == 1) {
                 if (mazeBuilt) {
-                    // Do Solve Manually
-                    executeSolveManually(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth(), rm.getEnvStructure());
+                    // Do Solve Manually - NOTE: Doesnt work for random maze
+                    executeSolveManually(basePoint.x, basePoint.y, basePoint.z, mazeDimensions.first, mazeDimensions.second, charMaze);
                     solveMan = true;
                 }
                 else {
@@ -165,9 +148,8 @@ int main(int numParams, char* arguments[]){
             else if (option == 2) {
                 // Do Show Escape Route
                 if (solveMan) {
-                    std::cout << std::endl;
-                    std::cout << "OPTION 2 [Show Escape Route] WAS SUCCESSFULLY EXECUTED";
-                    std::cout << std::endl;
+                    player.showEscapeRoute();
+                    solveMan = false;
                 }
                 else {
                     std::cout << "Initialize player using Solve manually." << std::endl;
@@ -175,9 +157,6 @@ int main(int numParams, char* arguments[]){
             }
             else if (option == 3) {
                 // Do Back (Return to Main Menu)
-                // std::cout << std::endl;
-                // std::cout << "OPTION 3 [Back] WAS SUCCESSFUL EXECUTED";
-                // std::cout << std::endl;
                 curState = ST_Main;
             }
             else {
@@ -214,12 +193,13 @@ int main(int numParams, char* arguments[]){
         }
     }
 
-    // Do Minecraft Reversal Here
-    if (mazeBuilt) {
-        reverseBuildMaze(rm.getX(), rm.getY(), rm.getZ(), rm.getLength(), rm.getWidth());
-    }
     // Print Exit Message
     printExitMassage();
+
+    // Do Minecraft Reversal Here
+    if (mazeBuilt) {
+        maze.reverseTerrain();
+    }
 
 
     return EXIT_SUCCESS;

@@ -217,24 +217,16 @@ void carveMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<s
 
             //Remove wall between current cell and neighbor
             if ((nextX - X == -2) && (nextZ - Z == 0)) {  // neighbor is UP
-                nextX += 1;
-                maze.at(nextX).at(nextZ) = '.';
-                nextX -= 1;
+                maze.at(nextX + 1).at(nextZ) = '.';
             }
             else if ((nextX - X == 0) && (nextZ - Z == -2)) {  // neighbor is LEFT
-                nextZ += 1;
-                maze.at(nextX).at(nextZ) = '.';
-                nextZ -= 1;
+                maze.at(nextX).at(nextZ + 1) = '.';
             }
             else if ((nextX - X == 0) && (nextZ - Z == 2)) {  // neighbor is RIGHT
-                nextZ -= 1;
-                maze.at(nextX).at(nextZ) = '.';
-                nextZ += 1;
+                maze.at(nextX).at(nextZ - 1) = '.';
             }
             else if ((nextX - X == 2) && (nextZ - Z == 0)) {  // neighbor is DOWN
-                nextX -= 1;
-                maze.at(nextX).at(nextZ) = '.';
-                nextX += 1;
+                maze.at(nextX - 1).at(nextZ) = '.';
             }
             //Add cell to path of visited cells
             path.push_back(std::make_pair(nextZ, nextX));

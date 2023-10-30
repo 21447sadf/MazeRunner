@@ -9,26 +9,25 @@ Maze::Maze() {
     this->basePoint = mcpp::Coordinate(0, 0, 0); //Maze vertex
     this->xlength = 0;
     this->zlength = 0;
-    this->mode = 0;
 }
 
-//Overloaded constructor
-Maze::Maze(mcpp::Coordinate basePoint, unsigned int xlen, 
-                                    unsigned int zlen,
-                                    bool mode)
-{
-    //Set basePoint
+void Maze::setMazeParameters(mcpp::Coordinate basePoint, int xlength, int zlength) {
     this->basePoint = basePoint;
-    this->xlength = xlen;
-    this->zlength = zlen;
-    this->mode = mode;
+    this->xlength = xlength;
+    this->zlength = zlength;
 }
 
 //Build maze
 void Maze::buildMazeInMC(std::vector<std::vector<char>> charMaze) { 
+    std::cout << "Building maze..." << std::endl;
 
     //TP to 10 units above basepoint:
     mc.setPlayerPosition(basePoint + mcpp::Coordinate(0, 10, 0));
+
+    //Save current terrain 
+    saveTerrain();
+    //Flatten terrain in MC
+    flattenTerrain();
 
     //Build maze in MC - print each set of 3 vertical blocks 
     //Set wall and air blocks

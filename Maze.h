@@ -10,10 +10,9 @@ public:
     //Default constructor
     Maze();
 
-    //Overloaded constructor
-    Maze(mcpp::Coordinate basePoint, unsigned int xlen, 
-                                        unsigned int zlen,
-                                        bool mode);
+    //Set maze parameters
+    void setMazeParameters(mcpp::Coordinate basePoint, int xlength, int zlength);
+
     //build maze function
     void buildMazeInMC(std::vector<std::vector<char>> charMaze);
 
@@ -35,7 +34,6 @@ private:
     int xlength;
     int zlength;
     std::vector<std::vector<int>> heights;
-    bool mode = 0;
 };
 
 
