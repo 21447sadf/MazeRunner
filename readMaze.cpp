@@ -21,7 +21,7 @@ void readMaze::executeReadMaze() {
     // basePoint of Maze
 
     bool validInput = false;
-        std::cout << "Enter base point of maze" << std::endl;
+        std::cout << "Enter the basePoint of maze:" << std::endl;
         while (!validInput) {
         try {
             if (!(std::cin >> build_x) || !(std::cin >> build_y) || !(std::cin >> build_z)) {
@@ -41,7 +41,7 @@ void readMaze::executeReadMaze() {
     // Length & Width of Maze
     validInput = false;
 
-    std::cout << "Enter length and width of maze:" << std::endl;
+    std::cout << "Enter the length and width of maze:" << std::endl;
     while (!validInput) {
         try {
             if (!(std::cin >> envLength) || !(std::cin >> envWidth)) {

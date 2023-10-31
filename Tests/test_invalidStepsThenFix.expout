@@ -10,7 +10,7 @@ Welcome to MineCraft MazeRunner!
 5) Exit
 
 Enter Menu item to continue: 
-Maze not defined! Generate maze before Building.
+Maze not defined! Generate maze before building.
 
 ------------- MAIN MENU -------------
 1) Generate Maze
@@ -27,7 +27,7 @@ Enter Menu item to continue:
 3) Back
 
 Enter Menu item to continue: 
-Build Maze before solving...
+Build Maze before solving.
 
 ------------- SOLVE MAZE -------------
 1) Solve Manually
@@ -35,7 +35,7 @@ Build Maze before solving...
 3) Back
 
 Enter Menu item to continue: 
-Initialize player using Solve manually.
+Initialize player using Solve Manually.
 
 ------------- SOLVE MAZE -------------
 1) Solve Manually
@@ -83,9 +83,8 @@ xxxxxxx
 5) Exit
 
 Enter Menu item to continue: 
-Flattening maze area...
 Building maze...
-Maze building complete.
+Success! Maze building complete.
 
 ------------- MAIN MENU -------------
 1) Generate Maze

@@ -11,6 +11,6 @@
 #include <ctime>
 
 // Declare the function prototype
-void executeSolveManually(int build_x, int build_y, int build_z, int envLength, int envWidth, const std::vector<std::vector<char>>& envStructure);
+void executeSolveManually(int build_x, int build_y, int build_z, int envLength, int envWidth, const std::vector<std::vector<char>>& envStructure, bool mode);
 
 #endif // SOLVEMANUALLY_H

@@ -1,6 +1,25 @@
 #include "solveManually.h"
 
-void executeSolveManually(int build_x, int build_y, int build_z, int envLength, int envWidth, const std::vector<std::vector<char>>& envStructure) {
+void executeSolveManually(int build_x, int build_y, int build_z, int envLength, int envWidth, const std::vector<std::vector<char>>& envStructure, bool mode) {
+    if (mode == 1) {
+    for (int row = 0; row < envLength; row++) {
+        for (int col = envWidth - 1; col >= 0; col--) {
+            if (envStructure[row][col] == '.') { // Assuming ' ' represents an empty cell
+                int playerX = build_x + row;
+                int playerZ = build_z + col;
+                int playerY = build_y; // Adjust the Y coordinate to avoid being inside blocks
+
+                mcpp::MinecraftConnection mc;
+                mcpp::Coordinate playerPos(playerX, playerY, playerZ);
+                mc.setPlayerPosition(playerPos);
+                break;
+            }
+        }
+    }
+    std::cout << "Maze ready to Solve..." << std::endl;
+    }
+
+    else {
     // Seed the random number generator
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
@@ -33,4 +52,5 @@ void executeSolveManually(int build_x, int build_y, int build_z, int envLength, 
     mcpp::Coordinate playerPos(playerX, playerY, playerZ);
     mc.setPlayerPosition(playerPos);
     std::cout << "Maze ready to Solve..." << std::endl;
+    }
 }

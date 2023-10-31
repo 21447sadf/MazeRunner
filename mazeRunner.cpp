@@ -113,7 +113,7 @@ int main(int numParams, char* arguments[]){
             if (mazeGenerated && !mazeBuilt) {
                 maze.setMazeParameters(basePoint, mazeDimensions.first, mazeDimensions.second);
                 maze.buildMazeInMC(charMaze);
-                mazeGenerated = false;
+                // mazeGenerated = false;
                 mazeBuilt = true;
                 }
             // Maze generated and built
@@ -121,7 +121,7 @@ int main(int numParams, char* arguments[]){
                 maze.reverseTerrain();
                 maze.setMazeParameters(basePoint, mazeDimensions.first, mazeDimensions.second);
                 maze.buildMazeInMC(charMaze);
-                mazeGenerated = false;
+                // mazeGenerated = false;
                 mazeBuilt = true;
             }
             else {
@@ -138,11 +138,11 @@ int main(int numParams, char* arguments[]){
             if (option == 1) {
                 if (mazeBuilt) {
                     // Do Solve Manually - NOTE: Doesnt work for random maze
-                    executeSolveManually(basePoint.x, basePoint.y, basePoint.z, mazeDimensions.first, mazeDimensions.second, charMaze);
+                    executeSolveManually(basePoint.x, basePoint.y, basePoint.z, mazeDimensions.first, mazeDimensions.second, charMaze, mode);
                     solveMan = true;
                 }
                 else {
-                    std::cout << "Build Maze before solving..." << std::endl;
+                    std::cout << "Build Maze before solving." << std::endl;
                 }
             }
             else if (option == 2) {
@@ -152,7 +152,7 @@ int main(int numParams, char* arguments[]){
                     solveMan = false;
                 }
                 else {
-                    std::cout << "Initialize player using Solve manually." << std::endl;
+                    std::cout << "Initialize player using Solve Manually." << std::endl;
                 }
             }
             else if (option == 3) {
@@ -193,14 +193,13 @@ int main(int numParams, char* arguments[]){
         }
     }
 
-    // Print Exit Message
-    printExitMassage();
-
     // Do Minecraft Reversal Here
     if (mazeBuilt) {
         maze.reverseTerrain();
     }
 
+    // Print Exit Message
+    printExitMassage();
 
     return EXIT_SUCCESS;
 
