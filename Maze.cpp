@@ -52,7 +52,7 @@ void Maze::buildMazeInMC(std::vector<std::vector<char>> charMaze) {
     }
 
     //Print success message
-    std::cout << "Success! Maze built in Minecraft" << std::endl;
+    std::cout << "Success! Maze building complete." << std::endl;
 }
 
 //Function to store original heights of terrain area
@@ -87,7 +87,10 @@ void Maze::flattenTerrain() { //DONE - NEEDS TESTING
 }
 
 //Function to restore terrain
-void Maze::reverseTerrain() { 
+void Maze::reverseTerrain() {
+
+//Tells user it is reverting the maze area
+std::cout << "Reverting maze area..." << std::endl; 
 
 //Get terrain block
     for (int i = 3; i >= 0; i--) {
