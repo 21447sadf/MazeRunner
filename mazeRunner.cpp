@@ -163,15 +163,13 @@ int main(int numParams, char* arguments[]){
                 }
             }
             else if (option == 2) {
-                // Do Show Escape Route
-                if (solveMan) {
-                    std::cout << std::endl;
-                    std::cout << "OPTION 2 [Show Escape Route] WAS SUCCESSFULLY EXECUTED";
-                    std::cout << std::endl;
+                 if (solveMan == true) {
+                    //TO DO: ADD CONDITION TO CHECK MAZE IS BUILT BEFORE SOLVING
+                    // player.showEscapeRoute();
+                   
+                    player.showEscapeRoute("BREADTH_FIRST_SEARCH");
                 }
-                else {
-                    std::cout << "Initialize player using Solve manually." << std::endl;
-                }
+                    
             }
             else if (option == 3) {
                 // Do Back (Return to Main Menu)
