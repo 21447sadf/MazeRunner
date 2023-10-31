@@ -148,7 +148,7 @@ int main(int numParams, char* arguments[]){
             else if (option == 2) {
                 // Do Show Escape Route
                 if (solveMan) {
-                    player.showEscapeRoute();
+                    player.showEscapeRoute("BREADTH_FIRST_SEARCH");
                     solveMan = false;
                 }
                 else {
