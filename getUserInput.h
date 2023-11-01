@@ -2,8 +2,6 @@
 #include <limits>
 #include <mcpp/mcpp.h>
 
-//TO DO: ADD CONSTRAINT - MAZE DIMENSIONS MUST BE MIN (3, 3) AND MAX (99, 99)
-
 //Function to get start point from user
 mcpp::Coordinate getBasePoint(void) {
     //Declare inputs
@@ -54,7 +52,7 @@ std::pair<int, int> getMazeDimensions(void) {
             else if ((z_length % 2 == 0) || (x_length % 2 == 0)) { //If inputs are even
                 throw std::invalid_argument("Dimensions must be odd and positive. Please re-enter:");
             }
-            else if ((z_length < 3) || (x_length > 99)) {
+            else if ((z_length < 3) || (z_length > 99) || (x_length < 3) || (z_length > 99)) { //Inputs not between 3-99
                 throw std::invalid_argument("Dimensions exceed allowable limits (3-99). Please re-enter:");
             }
             else {
@@ -68,7 +66,7 @@ std::pair<int, int> getMazeDimensions(void) {
         } 
     }
 
-    return std::make_pair(x_length, z_length);
+    return std::make_pair(z_length, x_length);
 }
 
 void printMazeInTerminal(std::vector<std::vector<char>> charMaze, int x, int y, int z) {

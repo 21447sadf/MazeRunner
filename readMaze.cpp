@@ -19,24 +19,50 @@ readMaze::readMaze() {
 
 void readMaze::executeReadMaze() {
     // basePoint of Maze
-    // int build_x = 0;
-    // int build_y = 0;
-    // int build_z = 0;
 
-    std::cout << "Enter the basePoint of maze:" << std::endl;
-
-    std::cin >> build_x;
-    std::cin >> build_y;
-    std::cin >> build_z;
+    bool validInput = false;
+        std::cout << "Enter the basePoint of maze:" << std::endl;
+        while (!validInput) {
+        try {
+            if (!(std::cin >> build_x) || !(std::cin >> build_y) || !(std::cin >> build_z)) {
+                throw std::invalid_argument("Invalid input. Please enter integers:");
+            }
+            else {
+                validInput = true;
+            }
+        }
+         catch (const std::exception& e) {
+            std::cerr << e.what() << std::endl;
+            std::cin.clear();  // Clear the error state
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear the input buffer
+        }
+    }
 
     // Length & Width of Maze
-    // int envLength = 0;
-    // int envWidth = 0;
+    validInput = false;
 
     std::cout << "Enter the length and width of maze:" << std::endl;
-
-    std::cin >> envLength;
-    std::cin >> envWidth;
+    while (!validInput) {
+        try {
+            if (!(std::cin >> envLength) || !(std::cin >> envWidth)) {
+                throw std::invalid_argument("Invalid input. Please enter integers:");
+            }
+            else if ((envLength % 2 == 0) || (envWidth % 2 == 0)) { //If inputs are even
+                throw std::invalid_argument("Dimensions must be odd and positive. Please re-enter:");
+            }
+            else if ((envLength < 3) || (envLength > 99) || (envWidth < 3) || (envWidth > 99)) { //Inputs not between 3-99
+                throw std::invalid_argument("Dimensions exceed allowable limits (3-99). Please re-enter:");
+            }
+            else {
+                validInput = true;
+            }
+        }
+         catch (const std::exception& e) {
+            std::cerr << e.what() << std::endl;
+            std::cin.clear();  // Clear the error state
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear the input buffer
+        } 
+    }
 
     // Maze Structure
     // char envStructure[envLength][envWidth];

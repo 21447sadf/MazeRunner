@@ -1,6 +1,7 @@
 // Include any necessary headers here
 #include <iostream>
 #include <vector>
+#include <limits>
 
 // Declare the class
 class readMaze {
