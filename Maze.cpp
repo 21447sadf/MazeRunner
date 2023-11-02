@@ -63,7 +63,7 @@ void Maze::saveTerrain() {
     this->heights = mc.getHeights(origLoc1, origLoc2);
 }
 
-void Maze::flattenTerrain() { //DONE - NEEDS TESTING
+void Maze::flattenTerrain() {
     //Terrain is flattened by individually flattening the column at each x by z blocks
 
     for (int x = 0; x < xlength; x++) {

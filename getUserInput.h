@@ -13,7 +13,7 @@ mcpp::Coordinate getBasePoint(void) {
     bool validInput = false;
 
     // Loop to prompt+check base point input
-    std::cout << "Enter base point of maze" << std::endl;
+    std::cout << "Enter the basePoint of maze" << std::endl;
         while (!validInput) {
         try {
             if (!(std::cin >> xPoint) || !(std::cin >> yPoint) || !(std::cin >> zPoint)) {

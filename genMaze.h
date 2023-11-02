@@ -95,12 +95,12 @@ bool isValid(std::vector<std::vector<char>> &inputMaze, int Z_Coord, int X_Coord
             }
         }
         else if (direction == 1) { //RIGHT 
-            if (((inputMaze.at(X_Coord).at(Z_Coord) == '.')) || (inputMaze.at(X_Coord).at(Z_Coord-1) == '.')) {
+            if ((inputMaze.at(X_Coord).at(Z_Coord) == '.') || (inputMaze.at(X_Coord).at(Z_Coord-1) == '.')) {
             return false;
             }
         }
         else if (direction == 2) { //DOWN
-            if (((inputMaze.at(X_Coord).at(Z_Coord) == '.')) || (inputMaze.at(X_Coord-1).at(Z_Coord) == '.')) {
+            if ((inputMaze.at(X_Coord).at(Z_Coord) == '.') || (inputMaze.at(X_Coord-1).at(Z_Coord) == '.')) {
             return false;
             }
         }
@@ -276,7 +276,7 @@ std::vector<std::vector<char>> genMaze(int x_length, int z_length, bool mode) {
     //Build maze
     carveMaze(maze, startZ, startX, path, mode);
 
-    //Output "Maze generated successfully" + Maze info
+    //Output "Maze generated successfully" 
     std::cout << "Maze generated successfully" << std::endl;
 
     return maze;

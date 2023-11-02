@@ -23,6 +23,10 @@ public:
 
     //Function to undo maze in MC
     void reverseTerrain();
+
+    //Functions for E1
+    void E1_reverseMaze();
+    void E1_buildMazeInMC(std::vector<std::vector<char>> charMaze);
     
     //Destructor 
     ~Maze();
