@@ -124,6 +124,67 @@ std::cout << "Reverting maze area..." << std::endl;
     }
 }
 
+//Function to restore terrain
+void Maze::E1_reverseMaze() { 
+
+    mcpp::BlockType WALL(5, 4);
+    mcpp::BlockType AIR(0);
+
+    std::cout << "Reverting maze area..." << std::endl; 
+
+//Reverse maze blocks
+    for (int x = 0; x < xlength; x++) {
+        for (int z = 0; z < zlength; z++) {
+            for (int y = 0; y < 3; y++) {
+                if (mc.getBlock(basePoint + mcpp::Coordinate(x, y, z)) == WALL) {
+                    mc.setBlock(basePoint + mcpp::Coordinate(x, y, z), AIR);
+                }
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        }
+    }
+}
+
+void Maze::E1_buildMazeInMC(std::vector<std::vector<char>> charMaze) { 
+    std::cout << "Building maze..." << std::endl;
+
+    //TP to 10 units above basepoint:
+    mc.setPlayerPosition(basePoint + mcpp::Coordinate(0, 10, 0));
+
+    //Build maze in MC - print each set of 3 vertical blocks 
+    //Set wall and air blocks
+    mcpp::BlockType WALL(5, 4);
+    mcpp::BlockType AIR(0);
+
+    for (int x = 0; x < xlength; x++) {
+        for (int z = 0; z < zlength; z++) {
+            //If maze char is a wall
+            if (charMaze.at(x).at(z) == 'x') {
+                //Set ACACIA walls only if blocks are air
+                for (int i = 0; i < 3; i++) {
+                    //If block is air, set to wall
+                    if (mc.getBlock(basePoint + mcpp::Coordinate(x, i, z)) == mcpp::Blocks::AIR) {
+                        mc.setBlock(basePoint + mcpp::Coordinate(x, i, z), WALL);
+                    }
+                }
+            }
+            //Else if maze char is air
+            else if (charMaze.at(x).at(z) == '.') {
+                //If block has slope of 1, increase height
+                int height = mc.getHeight(x, z);
+                mc.setBlocks(mcpp::Coordinate(basePoint.x + x, height, basePoint.z + z), 
+                            mcpp::Coordinate(basePoint.x + x, height + 2, basePoint.z + z), AIR);
+            }
+            //Otherwise if ' ' (obstacle), leave as is
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        }
+    }
+
+    //Print success message
+    std::cout << "Success! Maze building complete." << std::endl;
+}
+
+
 Maze::~Maze()
 {
 }
