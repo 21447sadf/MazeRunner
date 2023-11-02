@@ -27,7 +27,7 @@ Enter Menu item to continue:
 3) Back
 
 Enter Menu item to continue: 
-Build Maze before solving.
+Build Maze before solving...
 
 ------------- SOLVE MAZE -------------
 1) Solve Manually
@@ -43,6 +43,7 @@ Initialize player using Solve Manually.
 3) Back
 
 Enter Menu item to continue: 
+Initialize player using Solve Manually.
 
 ------------- MAIN MENU -------------
 1) Generate Maze

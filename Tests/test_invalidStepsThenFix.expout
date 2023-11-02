@@ -27,7 +27,7 @@ Enter Menu item to continue:
 3) Back
 
 Enter Menu item to continue: 
-Build Maze before solving.
+Build Maze before solving...
 
 ------------- SOLVE MAZE -------------
 1) Solve Manually
@@ -35,7 +35,7 @@ Build Maze before solving.
 3) Back
 
 Enter Menu item to continue: 
-Initialize player using Solve Manually.
+Initialize player using Solve manually.
 
 ------------- SOLVE MAZE -------------
 1) Solve Manually
@@ -57,10 +57,11 @@ Enter Menu item to continue:
 1) Read Maze from terminal
 2) Generate Random Maze
 3) Back
-
+Initialize player using Solve manually.
 Enter Menu item to continue: 
-Enter the basePoint of maze:
-Enter the length and width of maze:
+Initialize player using Solve manually.
+Enter base point of maze
+Enter length and width of maze:
 Enter the maze structure:
 Maze read successfully
 **Printing Maze**
@@ -84,7 +85,7 @@ xxxxxxx
 
 Enter Menu item to continue: 
 Building maze...
-Success! Maze building complete.
+Success! Maze built in Minecraft.
 
 ------------- MAIN MENU -------------
 1) Generate Maze
@@ -117,7 +118,7 @@ Enter Menu item to continue:
 4) Show Team Information
 5) Exit
 
-Enter Menu item to continue: 
+
 Reverting maze area...
 
 The End!
