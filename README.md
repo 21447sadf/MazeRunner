@@ -1,4 +1,5 @@
 ## Team Information
+Team Name: BitBusters
 Team Number: 58
 
 ### GitHub User Mapping
@@ -24,8 +25,10 @@ It allows players to generate, build and solve mazes in the game.
 HOW TO RUN THE PROGRAM:
 - Ensure that you have a Minecraft Spigot Server running already and already have the game running and on that server (version 1.19.4).
 - Open up a terminal and make sure you navigate to the program folder.
-- Run the mazeRunner file using the terminal to start the program as such "./mazeRunner".
-   - if you wish to run the program in test mode use the "-testMode" flag as such "./mazeRunner -testMode".
+- Run the mazeRunner file using the terminal to start the program as such: "./mazeRunner [mode]". Replace mode with one of the following optional parameters:
+      1. "-testMode" : Sets program to testing mode
+      2. "-E1"       : Build mazes without flattening terrain
+      3. "-E2"       : Find shortest route towards maze exit 
 - You should now be greeted with the program interface and be able to interact with it.
 
 PROGRAM OVERVIEW:
@@ -61,14 +64,14 @@ The Main Menu displays 5 options.
    - `DevlynJB` (Done in "Devlyn_menu" branch)
 NOTE: Each member contributed to the creation of the main menu, which is displayed in their respective branches.
 Dameer's and Sadf's main menus are the main menus that were combined into main because they handle errors correctly and integrate effectively with the rest of the program.
-2. Reading maze information from Terminal and data structurer for holding maze
+2. Reading maze information from Terminal and data structure for holding maze
    - `DameerP` (Merged in main)
    - `DevlynJB` (Done in "Devlyn_menu" branch)
-NOTE: Dameer's code is merged to main because it offers great code strucutre and compliments well with the rest of the program.
+NOTE: Dameer's code is merged to main because it offers great code structure and compliments well with the rest of the program.
 3. Flattening the terrain
    - `DameerP` (Done in "dameer_menu" branch)
    - `21447sadf` (Merged in main)
-NOTE: Sadf's code is merged to main because it offers greater improvements and effectiveness.
+NOTE: Sadf's code is merged to main because it offers greater better efficiency in terrain levelling and storage.
 4. Building maze in MineCraft
    - `DameerP` (Merged in main)
    - `21447sadf` (Merged in main)
@@ -79,11 +82,11 @@ NOTE: Dameer is responsible for this task and therefore it is merged to main.
 6. Random Maze generation algorithm (Recursive back tracking)
    - `21447sadf` (Merged in main)
    - `LabibaShaikh` (Done in "Labiba_menu" branch)
-NOTE: ...
+NOTE: The maze initialisation + logic for recursive backtracking was worked on together by Labiba and Sadf. Sadf's code was used in the final program as it provided separate functions (eg: setStartPoint, createEntrance) adaptable to Enhancement 1.
 7. Show path to exit (Wall-follower)
    - `21447sadf` (Merged in main)
    - `DevlynJB` (Merged in main)
-NOTE: ...
+NOTE: Although both Devlyn and Sadf's code worked correctly, Sadf's code provided functions that were useful for building code in Enhancement 2. Hence, this is the code used by the program.
 8. Undo Modifications to the world (clean-up)
    - `DameerP` (Done in "dameer_menu" branch)
    - `21447sadf` (Merged in main)
@@ -91,11 +94,12 @@ NOTE: Sadf's code is merged to main because it fixed the issues that was present
 An example issue that is fixed with Sadf's code is when another maze is generated it will clean the first maze and then generate the new one successfully.
 9. Enhancement 1
    - `DevlynJB` (EDIT BRACKET)
+   - `21447sadf` (Done in "Sadf---Main-Menu")
 NOTE: ...
 10. Enhancement 2
-   - `21447sadf` (EDIT BRACKET)
-   - `LabibaShaikh` (EDIT BRACKET)
-NOTE: ...
+   - `21447sadf` (Done in "Sadf---Main-Menu")
+   - `LabibaShaikh` (Merged in main)
+NOTE: Labiba's code was merged to main as it provided a consistently accurate route during testing and fixed issues in Sadf's code where route did not appear correctly in MC.
 
 ## Other Tasks
 11. Test Cases
