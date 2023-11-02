@@ -131,6 +131,10 @@ int main(int numParams, char* arguments[]){
 
         // Solve Maze Menu
         else if (option == 3) {
+            if(!mazeBuilt){
+                std::cout << "Build Maze before attempting to solve." << std::endl;
+            }
+            else{
             curState = ST_SolveMaze;
             while (curState == ST_SolveMaze) {
             printSolveMazeMenu();
@@ -167,6 +171,7 @@ int main(int numParams, char* arguments[]){
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             }
             } 
+        }
         }
 
         // Show Team Information
