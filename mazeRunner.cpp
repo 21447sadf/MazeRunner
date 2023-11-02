@@ -145,9 +145,7 @@ int main(int numParams, char* arguments[]){
                     executeSolveManually(basePoint.x, basePoint.y, basePoint.z, mazeDimensions.first, mazeDimensions.second, charMaze, mode);
                     solveMan = true;
                 }
-                else {
-                    std::cout << "Build Maze before solving." << std::endl;
-                }
+        
             }
             else if (option == 2) {
                 // Do Show Escape Route
