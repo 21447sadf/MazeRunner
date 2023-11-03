@@ -52,8 +52,8 @@ std::pair<int, int> getMazeDimensions(void) {
             else if ((z_length % 2 == 0) || (x_length % 2 == 0)) { //If inputs are even
                 throw std::invalid_argument("Dimensions must be odd and positive. Please re-enter:");
             }
-            else if ((z_length < 3) || (z_length > 99) || (x_length < 3) || (z_length > 99)) { //Inputs not between 3-99
-                throw std::invalid_argument("Dimensions exceed allowable limits (3-99). Please re-enter:");
+            else if ((z_length < 5) || (z_length > 99) || (x_length < 5) || (z_length > 99)) { //Inputs not between 3-99
+                throw std::invalid_argument("Dimensions exceed allowable limits (5-99). Please re-enter:");
             }
             else {
                 validInput = true;

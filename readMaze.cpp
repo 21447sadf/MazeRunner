@@ -50,8 +50,8 @@ void readMaze::executeReadMaze() {
             else if ((envLength % 2 == 0) || (envWidth % 2 == 0)) { //If inputs are even
                 throw std::invalid_argument("Dimensions must be odd and positive. Please re-enter:");
             }
-            else if ((envLength < 3) || (envLength > 99) || (envWidth < 3) || (envWidth > 99)) { //Inputs not between 3-99
-                throw std::invalid_argument("Dimensions exceed allowable limits (3-99). Please re-enter:");
+            else if ((envLength < 5) || (envLength > 99) || (envWidth < 5) || (envWidth > 99)) { //Inputs not between 3-99
+                throw std::invalid_argument("Dimensions exceed allowable limits (5-99). Please re-enter:");
             }
             else {
                 validInput = true;

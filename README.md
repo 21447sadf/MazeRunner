@@ -56,6 +56,27 @@ The Main Menu displays 5 options.
 5. Exit
    - Reverts any changes made in the game and stops the program.
 
+PROGRAM ASSUMPTIONS:
+1. Read Maze from Terminal
+   - User always enters a perfect maze (no loops or isolations).
+   - Basepoint is at a reasonable location (not in ocean or cave).
+2. Random Maze Generator
+   -	Dimensions are always positive and odd, and between 5-99.
+   -	All user inputs will be integers for dimensions and base point.
+   -	Normal Mode: The maze returned in terminal is with ‘x’ for brick walls and ‘.’ for empty space.
+   - E1 Mode: The maze uses 'x' for walls, '.' empty paths, and ' ' for obstacles.
+   -	Terminal will show a message ‘MAZE GENERATED SUCCESSFULLY’, followed by the maze structure, then return to main menu.
+   -	User will always receive a perfect maze in terminal.
+3. Show Escape Route 
+   -	Dimensions of maze are those as set by the user in Generate Maze menu.
+   -	Player is already inside maze (Solve Manually) when Option 2 is selected.
+   -	Maze entrance is on flat ground, or situated such that there are air blocks in all four directions. 
+   -	Blocks in or outside of maze are free of layers (eg:snow, underground).
+4. Build Maze in MC
+   -	User is building maze above ground.
+   -	User is building maze at a reasonable location where they can enter (eg:not inside a mountain, ocean).
+   -	Terrain is made of single block type.
+
 ## Task Allocation
 1. Menu Navigation
    - `DameerP` (Merged in main)
