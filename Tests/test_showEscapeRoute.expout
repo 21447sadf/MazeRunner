@@ -1,0 +1,141 @@
+
+Welcome to MineCraft MazeRunner!
+--------------------------------
+
+------------- MAIN MENU -------------
+1) Generate Maze
+2) Build Maze in MineCraft
+3) Solve Maze
+4) Show Team Information
+5) Exit
+
+Enter Menu item to continue:
+
+------------- GENERATE MAZE -------------
+1) Read Maze from terminal
+2) Generate Random Maze
+3) Back
+
+Enter Menu item to continue:
+Enter the basePoint of maze
+Enter length and width of maze:
+Maze generated successfully
+**Printing Maze**
+BasePoint: (4819, 71, 5222)
+Structure:
+xxxxxxxxxxxxxxxxxxxxxxx
+..x...................x
+x.xxxxxxxxxxxxxxxxxxx.x
+x.x...................x
+x.x.xxxxxxxxxxxxxxxxxxx
+x.x...................x
+x.xxxxxxxxxxxxxxxxxxx.x
+x.x...................x
+x.x.xxxxxxxxxxxxxxxxxxx
+x.x...................x
+x.xxxxxxxxxxxxxxxxxxx.x
+x.x...................x
+x.x.xxxxxxxxxxxxxxxxxxx
+x.x...................x
+x.xxxxxxxxxxxxxxxxxxx.x
+x.x...................x
+x.x.xxxxxxxxxxxxxxxxxxx
+x.x...................x
+x.xxxxxxxxxxxxxxxxxxx.x
+x.....................x
+xxxxxxxxxxxxxxxxxxxxxxx
+**End Printing Maze**
+
+------------- MAIN MENU -------------
+1) Generate Maze
+2) Build Maze in MineCraft
+3) Solve Maze
+4) Show Team Information
+5) Exit
+
+Enter Menu item to continue:
+Building maze...
+Success! Maze building complete.
+
+------------- MAIN MENU -------------
+1) Generate Maze
+2) Build Maze in MineCraft
+3) Solve Maze
+4) Show Team Information
+5) Exit
+
+Enter Menu item to continue:
+
+------------- SOLVE MAZE -------------
+1) Solve Manually
+2) Show Escape Route
+3) Back
+
+Enter Menu item to continue:
+Maze ready to Solve...
+
+------------- SOLVE MAZE -------------
+1) Solve Manually
+2) Show Escape Route
+3) Back
+
+Enter Menu item to continue:
+Step[2]: (4838, 71, 5242)
+Step[3]: (4838, 71, 5241)
+Step[4]: (4838, 71, 5240)
+Step[5]: (4838, 71, 5239)
+Step[6]: (4838, 71, 5238)
+Step[7]: (4838, 71, 5237)
+Step[8]: (4838, 71, 5236)
+Step[9]: (4838, 71, 5235)
+Step[10]: (4838, 71, 5234)
+Step[11]: (4838, 71, 5233)
+Step[12]: (4838, 71, 5232)
+Step[13]: (4838, 71, 5231)
+Step[14]: (4838, 71, 5230)
+Step[15]: (4838, 71, 5229)
+Step[16]: (4838, 71, 5228)
+Step[17]: (4838, 71, 5227)
+Step[18]: (4838, 71, 5226)
+Step[19]: (4838, 71, 5225)
+Step[20]: (4838, 71, 5224)
+Step[21]: (4838, 71, 5223)
+Step[23]: (4837, 71, 5223)
+Step[24]: (4836, 71, 5223)
+Step[25]: (4835, 71, 5223)
+Step[26]: (4834, 71, 5223)
+Step[27]: (4833, 71, 5223)
+Step[28]: (4832, 71, 5223)
+Step[29]: (4831, 71, 5223)
+Step[30]: (4830, 71, 5223)
+Step[31]: (4829, 71, 5223)
+Step[32]: (4828, 71, 5223)
+Step[33]: (4827, 71, 5223)
+Step[34]: (4826, 71, 5223)
+Step[35]: (4825, 71, 5223)
+Step[36]: (4824, 71, 5223)
+Step[37]: (4823, 71, 5223)
+Step[38]: (4822, 71, 5223)
+Step[39]: (4821, 71, 5223)
+Step[40]: (4820, 71, 5223)
+Step[41]: (4820, 71, 5222)
+Step[42]: (4820, 71, 5221)
+
+------------- SOLVE MAZE -------------
+1) Solve Manually
+2) Show Escape Route
+3) Back
+
+Enter Menu item to continue:
+
+------------- MAIN MENU -------------
+1) Generate Maze
+2) Build Maze in MineCraft
+3) Solve Maze
+4) Show Team Information
+5) Exit
+
+Enter Menu item to continue:
+Reverting maze area...
+
+The End!
