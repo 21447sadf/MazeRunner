@@ -92,7 +92,7 @@ void Maze::reverseTerrain() {
 //Tells user it is reverting the maze area
 std::cout << "Reverting maze area..." << std::endl; 
 
-//Get terrain block
+//Undo Maze Blocks
     for (int i = 3; i >= 0; i--) {
         for (int x = 0; x < xlength; x++) {
             for (int z = 0; z < zlength; z++) {

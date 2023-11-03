@@ -89,13 +89,13 @@ bool E1_isValid(std::vector<std::vector<char>> &inputMaze, int Z_Coord, int X_Co
         }
         else if (direction == 2) { //DOWN
             if ((inputMaze.at(X_Coord).at(Z_Coord) == '.') || (inputMaze.at(X_Coord-1).at(Z_Coord) == '.')
-            ||  (inputMaze.at(X_Coord).at(Z_Coord) == ' ')  || (inputMaze.at(X_Coord-1).at(Z_Coord) == ' ')) {
+            ||  (inputMaze.at(X_Coord).at(Z_Coord) == ' ') || (inputMaze.at(X_Coord-1).at(Z_Coord) == ' ')) {
             return false;
             }
         }
         else if (direction == 3) { //LEFT
-            if ((inputMaze.at(X_Coord).at(Z_Coord) == '.') || (inputMaze.at(X_Coord-1).at(Z_Coord+1) == '.')
-            ||  (inputMaze.at(X_Coord).at(Z_Coord) == ' ') || (inputMaze.at(X_Coord-1).at(Z_Coord+1) == ' ')) {
+            if (((inputMaze.at(X_Coord).at(Z_Coord) == '.')) || (inputMaze.at(X_Coord-1).at(Z_Coord + 1) == '.')
+            ||   ((inputMaze.at(X_Coord).at(Z_Coord) == ' ')) || (inputMaze.at(X_Coord-1).at(Z_Coord + 1) == ' ')) {
                 return false;
             }
         }
@@ -227,7 +227,6 @@ std::pair<int, int> findObstacleCoord(mcpp::Coordinate basePoint, int xLength, i
                 int height = mc.getHeight(basePoint.x + x, basePoint.z + z);
                 //If block at height of area is not the same as ground, obstacle is present
                 if (!(ground == mc.getBlock(mcpp::Coordinate(basePoint.x + x, height, basePoint.z + z)))) {
-                    std::cout << "Coord: " << x + 1 << " " << z + 1 << std::endl;
                     return std::make_pair(x + 1, z + 1);
                 }
                 }
@@ -258,12 +257,6 @@ int isTerrainSuitable(mcpp::Coordinate basePoint, int xLength, int zLength) {
                 if (!(ground == mc.getBlock(mcpp::Coordinate(basePoint.x + x, height, basePoint.z + z)))) {
                     currLength++;
                 }
-                //Else if block at height of area is the same as ground, check slope doesn't exceed 1
-                else if (ground == mc.getBlock(mcpp::Coordinate(basePoint.x + x, height - 1, basePoint.z + z))) {
-                    if (height - (basePoint.y - 1) > 1) {
-                        return -1;
-                    }
-                }
             }
             //Update the max length of obstacle
             if (currLength > maxLength) {
@@ -277,7 +270,7 @@ int isTerrainSuitable(mcpp::Coordinate basePoint, int xLength, int zLength) {
                 mcpp::BlockType ground = mc.getBlock(basePoint + mcpp::Coordinate(x, -1, z));
                 int height = mc.getHeight(basePoint.x + x, basePoint.z + z);
                 //If block at height of area is not the same as ground, obstacle is present
-                if (!(ground == mc.getBlock(mcpp::Coordinate(basePoint.x + x, height, basePoint.z + z)))) {
+                if (!(ground == mc.getBlock(mcpp::Coordinate(basePoint.x + x, height - 1, basePoint.z + z)))) {
                     currWidth++;
                 }
                 }
@@ -321,7 +314,7 @@ std::vector<std::vector<char>> E1_genMaze(mcpp::Coordinate basePoint, int x_leng
     int obstStartX = coord.first;
     int obstStartZ = coord.second;
 
-    //Return empty maze if terrain isn't suitable 
+    // //Return empty maze if terrain isn't suitable 
     if (obstLength == -1) {
         return maze;
     }
@@ -384,14 +377,6 @@ std::vector<std::vector<char>> E1_genMaze(mcpp::Coordinate basePoint, int x_leng
 
     // Carve paths through maze
     E1_carveMaze(maze, startZ, startX, path);
-
-    //Print maze
-    for (unsigned int i = 0; i < maze.size(); i++) {
-        for (unsigned int j = 0; j < maze.at(0).size(); j++) {
-            std::cout << maze.at(i).at(j);
-        }
-        std::cout << std::endl;
-    }
 
     //Output "Maze generated successfully" 
     std::cout << "Maze generated successfully" << std::endl;
