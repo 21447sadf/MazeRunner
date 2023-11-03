@@ -8,6 +8,7 @@
 5) Exit
 
 Enter Menu item to continue:
+1
 
 ------------- GENERATE MAZE -------------
 1) Read Maze from terminal
@@ -15,13 +16,13 @@ Enter Menu item to continue:
 3) Back
 
 Enter Menu item to continue:
-
+2
 Enter the basePoint of maze
-
+-28 68 58
 Enter length and width of maze:
-
+100 100
 Dimensions must be odd and positive. Please re-enter:
-
+11 13
 Maze generated successfully
 **Printing Maze**
 BasePoint: (-28, 68, 58)
@@ -47,6 +48,7 @@ xxxxxxxxxxxxx
 5) Exit
 
 Enter Menu item to continue:
+2
 Building maze...
 Success! Maze building complete.
 
@@ -58,6 +60,7 @@ Success! Maze building complete.
 5) Exit
 
 Enter Menu item to continue:
+3
 
 ------------- SOLVE MAZE -------------
 1) Solve Manually
@@ -65,6 +68,7 @@ Enter Menu item to continue:
 3) Back
 
 Enter Menu item to continue:
+1
 Maze ready to Solve...
 
 ------------- SOLVE MAZE -------------
@@ -73,6 +77,7 @@ Maze ready to Solve...
 3) Back
 
 Enter Menu item to continue:
+2
 Step[2]: (-19, 68, 68)
 Step[3]: (-19, 68, 67)
 Step[4]: (-19, 68, 66)
@@ -100,7 +105,7 @@ Step[22]: (-27, 68, 57)
 3) Back
 
 Enter Menu item to continue:
-
+3
 
 ------------- MAIN MENU -------------
 1) Generate Maze
@@ -110,6 +115,7 @@ Enter Menu item to continue:
 5) Exit
 
 Enter Menu item to continue:
+5
 Reverting maze area...
 
 The End!

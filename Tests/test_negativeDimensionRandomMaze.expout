@@ -1,3 +1,4 @@
+
 Welcome to MineCraft MazeRunner!
 --------------------------------
 
@@ -8,14 +9,41 @@ Welcome to MineCraft MazeRunner!
 4) Show Team Information
 5) Exit
 
-Enter Menu item to continue:
+Enter Menu item to continue: 
 
 ------------- GENERATE MAZE -------------
 1) Read Maze from terminal
 2) Generate Random Maze
 3) Back
 
-Enter Menu item to continue:
-Enter base point of maze
+Enter Menu item to continue: 
+Enter the basePoint of maze
 Enter length and width of maze:
-Dimensions must be odd and positive. Please re-enter:
+Maze generated successfully
+**Printing Maze**
+BasePoint: (-25, 68, 58)
+Structure: 
+xxxxxxxxxxx
+..x.......x
+x.xxxxxxx.x
+x.x.......x
+x.x.xxxxxxx
+x.x.......x
+x.xxxxxxx.x
+x.x.......x
+x.x.xxxxxxx
+x.x.......x
+x.xxxxxxx.x
+x.........x
+xxxxxxxxxxx
+**End Printing Maze**
+
+------------- MAIN MENU -------------
+1) Generate Maze
+2) Build Maze in MineCraft
+3) Solve Maze
+4) Show Team Information
+5) Exit
+
+Enter Menu item to continue: 
+Building maze...
