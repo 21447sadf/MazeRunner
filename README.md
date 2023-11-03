@@ -56,6 +56,9 @@ The Main Menu displays 5 options.
 5. Exit
    - Reverts any changes made in the game and stops the program.
 
+VIDEO DEMONSTRATION:
+https://rmiteduau.sharepoint.com/sites/PS2753/_layouts/15/stream.aspx?id=%2Fsites%2FPS2753%2FShared%20Documents%2FGeneral%2Fps2%5Fg58%5Fvideo%5Fv1%2Emp4&referrer=StreamWebApp%2EWeb&referrerScenario=AddressBarCopied%2Eview 
+
 PROGRAM ASSUMPTIONS:
 1. Read Maze from Terminal
    - User always enters a perfect maze (no loops or isolations).
@@ -75,7 +78,7 @@ PROGRAM ASSUMPTIONS:
 4. Build Maze in MC
    -	User is building maze above ground.
    -	User is building maze at a reasonable location where they can enter (eg:not inside a mountain, ocean).
-   -	Terrain is made of single block type.
+   -	Terrain is made of single block type and free of obstacles above ground (eg:trees). The program will not replace these blocks, it will only revert the terrain to its original state.
 
 ## Task Allocation
 1. Menu Navigation
@@ -114,9 +117,9 @@ NOTE: Although both Devlyn and Sadf's code worked correctly, Sadf's code provide
 NOTE: Sadf's code is merged to main because it fixed the issues that was present in Dameer's code. 
 An example issue that is fixed with Sadf's code is when another maze is generated it will clean the first maze and then generate the new one successfully.
 9. Enhancement 1
-   - `DevlynJB` (EDIT BRACKET)
-   - `21447sadf` (Done in "Sadf---Main-Menu")
-NOTE: ...
+   - `DevlynJB` (Merged in Main)
+   - `21447sadf` (Merged in Main)
+NOTE: The terrain scanning function (isTerrainSuitable) and build maze function was written and adapted by Devlyn. The maze generator for this (in genMaze_E1.h) was written by Sadf. These were combined in main to create the final program for Enhancement 1.
 10. Enhancement 2
    - `21447sadf` (Done in "Sadf---Main-Menu")
    - `LabibaShaikh` (Merged in main)
@@ -129,5 +132,3 @@ NOTE: Labiba's code was merged to main as it provided a consistently accurate ro
    - `LabibaShaikh` (Merged in main)
    - `DevlynJB` (Merged in main)
 NOTE: Each member contributed to writing test cases for the program.
-12. [Any other relevent task]
-   - ...
