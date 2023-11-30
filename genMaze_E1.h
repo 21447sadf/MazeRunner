@@ -75,6 +75,7 @@ bool E1_isValid(std::vector<std::vector<char>> &inputMaze, int Z_Coord, int X_Co
     }
     else {
         //Check if current cell's wall is already carved as path '.'
+        //Also check if slope between current cell and neighbor is 
         if (direction == 0) { //UP
             if ((inputMaze.at(X_Coord).at(Z_Coord) == '.') || (inputMaze.at(X_Coord+1).at(Z_Coord) == '.')
             ||  (inputMaze.at(X_Coord).at(Z_Coord) == ' ') || (inputMaze.at(X_Coord+1).at(Z_Coord) == ' ')) {  // Check for 'X' and '_' UP
@@ -157,8 +158,13 @@ std::vector<std::pair<int, int>> E1_unvisitedNeighbors(std::vector<std::vector<c
 return neighbors;
 }
 
+bool slopeIsValid(mcpp::Coordinate basePoint, int X, int Y, int nextX, int nextY) {
+    return false;
+}
+
 //Function to carve path through maze
-void E1_carveMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<std::pair<int, int>> &path) {
+void E1_carveMaze(std::vector<std::vector<char>> &maze, mcpp::Coordinate basePoint, int Z, int X, std::vector<std::pair<int, int>> &path) {
+    mcpp::MinecraftConnection mc;
     //Carve path on current cell
     maze.at(X).at(Z) = '.';
 
@@ -184,7 +190,7 @@ void E1_carveMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vecto
             nextZ = prevCell.first;
             nextX = prevCell.second;
             //RECURSIVE STEP: Call buildMaze on previous cell
-            E1_carveMaze(maze, nextZ, nextX, path);
+            E1_carveMaze(maze, basePoint, nextZ, nextX, path);
         }
     }
     else {
@@ -196,128 +202,176 @@ void E1_carveMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vecto
             nextZ = direction.first;
             nextX = direction.second;
 
+            //Height on current cell
+            int currHeight = mc.getHeight(basePoint.x + X, basePoint.z + Z);
+
+            //Check slope between current cell and neighbor < 1
+            //IF this condition is met:
             //Remove wall between current cell and neighbor
+            //ELSE IF condition is not met
+            //Set a wall on neighbor
             if ((nextX - X == -2) && (nextZ - Z == 0)) {  // neighbor is UP
-                maze.at(nextX + 1).at(nextZ) = '.';
+                if (abs(mc.getHeight(basePoint.x + nextX + 1, basePoint.z + nextZ) - currHeight) <= 1 &&
+                   (abs(mc.getHeight(basePoint.x + nextX + 1, basePoint.z + nextZ) - mc.getHeight(basePoint.x + nextX, basePoint.z + nextZ)) <= 1)) {
+                    maze.at(nextX + 1).at(nextZ) = '.';
+                    path.push_back(std::make_pair(nextZ, nextX));
+                }
+                //ELSE: 
+                //Backtrack to previous cell
+                else {
+                    // maze.at(nextX + 2).at(nextZ) = 'x';
+                    path.pop_back();
+                    nextZ = path.back().first;
+                    nextX = path.back().second;
+                }
             }
             else if ((nextX - X == 0) && (nextZ - Z == -2)) {  // neighbor is LEFT
-                maze.at(nextX).at(nextZ + 1) = '.';
+                if ((abs(mc.getHeight(basePoint.x + nextX, basePoint.z + nextZ + 1) - currHeight) <= 1) &&
+                   (abs(mc.getHeight(basePoint.x + nextX, basePoint.z + nextZ + 1) - mc.getHeight(basePoint.x + nextX, basePoint.z + nextZ)) <= 1)) {
+                    maze.at(nextX).at(nextZ + 1) = '.';
+                    path.push_back(std::make_pair(nextZ, nextX));
+                }
+                else {
+                    // maze.at(nextX).at(nextZ + 2) = 'x';
+                    path.pop_back();
+                    nextZ = path.back().first;
+                    nextX = path.back().second;
+                }
             }
             else if ((nextX - X == 0) && (nextZ - Z == 2)) {  // neighbor is RIGHT
-                maze.at(nextX).at(nextZ - 1) = '.';
+                if ((abs(mc.getHeight(basePoint.x + nextX, basePoint.z + nextZ - 1) - currHeight) <= 1) &&
+                   (abs(mc.getHeight(basePoint.x + nextX, basePoint.z + nextZ - 1) - mc.getHeight(basePoint.x + nextX, basePoint.z + nextZ)) <= 1)) {
+                    maze.at(nextX).at(nextZ - 1) = '.';
+                    path.push_back(std::make_pair(nextZ, nextX));
+                }
+                else {
+                    // maze.at(nextX).at(nextZ - 2) = 'x';
+                    path.pop_back();
+                    nextZ = path.back().first;
+                    nextX = path.back().second;
+                }
             }
             else if ((nextX - X == 2) && (nextZ - Z == 0)) {  // neighbor is DOWN
-                maze.at(nextX - 1).at(nextZ) = '.';
+                if ((abs(mc.getHeight(basePoint.x + nextX - 1, basePoint.z + nextZ) - currHeight) <= 1) &&
+                   (abs(mc.getHeight(basePoint.x + nextX - 1, basePoint.z + nextZ) - mc.getHeight(basePoint.x + nextX, basePoint.z + nextZ)) <= 1)) {
+                    maze.at(nextX - 1).at(nextZ) = '.';
+                    path.push_back(std::make_pair(nextZ, nextX));
+                }
+                else {
+                    path.pop_back();
+                    nextZ = path.back().first;
+                    nextX = path.back().second;
+                }
             }
             //Add cell to path of visited cells
-            path.push_back(std::make_pair(nextZ, nextX));
+            // path.push_back(std::make_pair(nextZ, nextX));
             //RECURSIVE STEP: Call buildMaze on next cell
-            E1_carveMaze(maze, nextZ, nextX, path);
+            E1_carveMaze(maze, basePoint, nextZ, nextX, path);
         }
     }
 } 
 
-//Function to find obstacles coordinates in MC (x, z)
-std::pair<int, int> findObstacleCoord(mcpp::Coordinate basePoint, int xLength, int zLength) {
-    mcpp::MinecraftConnection mc;
+// //Function to find obstacles coordinates in MC (x, z)
+// std::pair<int, int> findObstacleCoord(mcpp::Coordinate basePoint, int xLength, int zLength) {
+//     mcpp::MinecraftConnection mc;
 
-        for (int z = 0; z < zLength; z++) {
-            for (int x = 0; x < xLength; x++) {
-                mcpp::BlockType ground = mc.getBlock(basePoint + mcpp::Coordinate(x, -1, z));
-                int height = mc.getHeight(basePoint.x + x, basePoint.z + z);
-                //If block at height of area is not the same as ground, obstacle is present
-                if (!(ground == mc.getBlock(mcpp::Coordinate(basePoint.x + x, height, basePoint.z + z)))) {
-                    return std::make_pair(x + 1, z + 1);
-                }
-                }
-            }
-    return std::make_pair(0, 0);
-}
+//         for (int z = 0; z < zLength; z++) {
+//             for (int x = 0; x < xLength; x++) {
+//                 mcpp::BlockType ground = mc.getBlock(basePoint + mcpp::Coordinate(x, -1, z));
+//                 int height = mc.getHeight(basePoint.x + x, basePoint.z + z);
+//                 //If block at height of area is not the same as ground, obstacle is present
+//                 if (!(ground == mc.getBlock(mcpp::Coordinate(basePoint.x + x, height, basePoint.z + z)))) {
+//                     return std::make_pair(x + 1, z + 1);
+//                 }
+//                 }
+//             }
+//     return std::make_pair(0, 0);
+// }
 
-//Returns -1 for invalid environment, otherwise returns length of obstacle as an odd number
-int isTerrainSuitable(mcpp::Coordinate basePoint, int xLength, int zLength) {
-    mcpp::MinecraftConnection mc;
+// //Returns -1 for invalid environment, otherwise returns length of obstacle as an odd number
+// int isTerrainSuitable(mcpp::Coordinate basePoint, int xLength, int zLength) {
+//     mcpp::MinecraftConnection mc;
 
-    int currLength = 0;
-    int currWidth = 0;
-    int maxLength = 0;
-    int maxWidth = 0;
-    int obstDimension;
+//     int currLength = 0;
+//     int currWidth = 0;
+//     int maxLength = 0;
+//     int maxWidth = 0;
+//     int obstDimension;
 
-    // CHECK: Basepoint is in air
-    if (mc.getBlock(basePoint + mcpp::Coordinate(0, -1, 0)) == mcpp::Blocks::AIR) {
-        return -1;
-    }
+//     // CHECK: Basepoint is in air
+//     if (mc.getBlock(basePoint + mcpp::Coordinate(0, -1, 0)) == mcpp::Blocks::AIR) {
+//         return -1;
+//     }
     
-        for (int x = 0; x < xLength; x++) {
-            for (int z = 0; z < zLength; z++) {
-                mcpp::BlockType ground = mc.getBlock(basePoint + mcpp::Coordinate(x, -1, z));
-                int height = mc.getHeight(basePoint.x + x, basePoint.z + z);
-                //If block at height of area is not the same as ground, obstacle is present
-                if (!(ground == mc.getBlock(mcpp::Coordinate(basePoint.x + x, height, basePoint.z + z)))) {
-                    currLength++;
-                }
-            }
-            //Update the max length of obstacle
-            if (currLength > maxLength) {
-                maxLength = currLength;
-            }
-            currLength = 0;
-        }
+//         for (int x = 0; x < xLength; x++) {
+//             for (int z = 0; z < zLength; z++) {
+//                 mcpp::BlockType ground = mc.getBlock(basePoint + mcpp::Coordinate(x, -1, z));
+//                 int height = mc.getHeight(basePoint.x + x, basePoint.z + z);
+//                 //If block at height of area is not the same as ground, obstacle is present
+//                 if (!(ground == mc.getBlock(mcpp::Coordinate(basePoint.x + x, height, basePoint.z + z)))) {
+//                     currLength++;
+//                 }
+//             }
+//             //Update the max length of obstacle
+//             if (currLength > maxLength) {
+//                 maxLength = currLength;
+//             }
+//             currLength = 0;
+//         }
 
-        for (int z = 0; z < zLength; z++) {
-            for (int x = 0; x < xLength; x++) {
-                mcpp::BlockType ground = mc.getBlock(basePoint + mcpp::Coordinate(x, -1, z));
-                int height = mc.getHeight(basePoint.x + x, basePoint.z + z);
-                //If block at height of area is not the same as ground, obstacle is present
-                if (!(ground == mc.getBlock(mcpp::Coordinate(basePoint.x + x, height - 1, basePoint.z + z)))) {
-                    currWidth++;
-                }
-                }
-                //Update max width of obstacle
-                if (currWidth > maxWidth) {
-                    maxWidth = currWidth;
-                }
-                currWidth = 0;
-            }
+//         for (int z = 0; z < zLength; z++) {
+//             for (int x = 0; x < xLength; x++) {
+//                 mcpp::BlockType ground = mc.getBlock(basePoint + mcpp::Coordinate(x, -1, z));
+//                 int height = mc.getHeight(basePoint.x + x, basePoint.z + z);
+//                 //If block at height of area is not the same as ground, obstacle is present
+//                 if (!(ground == mc.getBlock(mcpp::Coordinate(basePoint.x + x, height - 1, basePoint.z + z)))) {
+//                     currWidth++;
+//                 }
+//                 }
+//                 //Update max width of obstacle
+//                 if (currWidth > maxWidth) {
+//                     maxWidth = currWidth;
+//                 }
+//                 currWidth = 0;
+//             }
 
-        //Set object length with larger dimension
-        obstDimension = (maxWidth >= maxLength) ? (maxWidth) : (maxLength);
+//         //Set object length with larger dimension
+//         obstDimension = (maxWidth >= maxLength) ? (maxWidth) : (maxLength);
 
-        //If even, change to odd length
-        if (obstDimension % 2 == 0) {
-            obstDimension += 1;
-        }
+//         //If even, change to odd length
+//         if (obstDimension % 2 == 0) {
+//             obstDimension += 1;
+//         }
     
 
-    return obstDimension;
-}
+//     return obstDimension;
+// }
 
 //Function to generate a random maze
 std::vector<std::vector<char>> E1_genMaze(mcpp::Coordinate basePoint, int x_length, int z_length) {
     
-    //Set maze length to larger value/convert to odd
-    int largerLength = 0;
-    largerLength = (x_length >= z_length) ? (x_length) : (z_length);
-    largerLength = (largerLength % 2 == 0) ? (largerLength + 1) : (largerLength);
+    // //Set maze length to larger value/convert to odd
+    // int largerLength = 0;
+    // largerLength = (x_length >= z_length) ? (x_length) : (z_length);
+    // largerLength = (largerLength % 2 == 0) ? (largerLength + 1) : (largerLength);
 
-    //Set x_length and z_length to new val
-    x_length = largerLength;
-    z_length = largerLength;
+    // //Set x_length and z_length to new val
+    // x_length = largerLength;
+    // z_length = largerLength;
 
     //Declare maze as 2D vector
     std::vector<std::vector<char>> maze;
 
-    //Check if terrain is suitable and find coords of obstacle
-    int obstLength = isTerrainSuitable(basePoint, x_length, z_length);
-    std::pair<int, int> coord = findObstacleCoord(basePoint, x_length, z_length);
-    int obstStartX = coord.first;
-    int obstStartZ = coord.second;
+    // //Check if terrain is suitable and find coords of obstacle
+    // int obstLength = isTerrainSuitable(basePoint, x_length, z_length);
+    // std::pair<int, int> coord = findObstacleCoord(basePoint, x_length, z_length);
+    // int obstStartX = coord.first;
+    // int obstStartZ = coord.second;
 
-    // //Return empty maze if terrain isn't suitable 
-    if (obstLength == -1) {
-        return maze;
-    }
+    // // //Return empty maze if terrain isn't suitable 
+    // if (obstLength == -1) {
+    //     return maze;
+    // }
 
     //Initialise maze
     for (int i = 0; i < x_length; i++) {
@@ -337,30 +391,47 @@ std::vector<std::vector<char>> E1_genMaze(mcpp::Coordinate basePoint, int x_leng
         }
     }
 
-    //Block out obstacle area with ' '
-    for (int i = 0; i < x_length; i++) {
+    //Scan MC Terrain and block out obstacles from maze
+    mcpp::MinecraftConnection mc;
+    mcpp::BlockType ground = mc.getBlock(mcpp::Coordinate(basePoint.x, basePoint.y - 1, basePoint.z));
+    for (int i = 0; i < x_length; i++)  {
         for (int j = 0; j < z_length; j++) {
-            //Clear obstacle area
-            if (j >= obstStartZ - 1 && (j < obstStartZ + obstLength - 1)) {
-             if ((i >= obstStartX - 1) && (i < obstStartX - 1 + obstLength)) {
-                maze.at(i).at(j) = ' ';
-            }
-            }
-            //Create border around obstacle
-            //Bottom and top border
-            if ((i == obstStartX - 2) || (i == obstStartX + obstLength - 1)) {
-                if (j >= obstStartZ - 2 && (j < obstStartZ + obstLength)) {
-                    maze.at(i).at(j) = 'x';
-                }
-            }
-            //Left and right border
-            else if ((i > obstStartX - 2) && (i < obstStartX + obstLength - 1)) {
-                if ((j == obstStartZ - 2) || (j == obstStartZ + obstLength - 1)) {
-                    maze.at(i).at(j) = 'x';
-                }
+            //Height of terrain
+            int currHeight = mc.getHeight(i, j);
+            //Heighest block on terrain
+            mcpp::BlockType obstacle = mc.getBlock(mcpp::Coordinate(basePoint.x + i, currHeight, basePoint.z + j));
+            
+            //Block out obstacle from maze with 'x'
+            if (!(obstacle == ground)) {
+                maze.at(i).at(j) = 'x';
             }
         }
     }
+
+    // //Block out obstacle area with ' '
+    // for (int i = 0; i < x_length; i++) {
+    //     for (int j = 0; j < z_length; j++) {
+    //         //Clear obstacle area
+    //         if (j >= obstStartZ - 1 && (j < obstStartZ + obstLength - 1)) {
+    //          if ((i >= obstStartX - 1) && (i < obstStartX - 1 + obstLength)) {
+    //             maze.at(i).at(j) = ' ';
+    //         }
+    //         }
+    //         //Create border around obstacle
+    //         //Bottom and top border
+    //         if ((i == obstStartX - 2) || (i == obstStartX + obstLength - 1)) {
+    //             if (j >= obstStartZ - 2 && (j < obstStartZ + obstLength)) {
+    //                 maze.at(i).at(j) = 'x';
+    //             }
+    //         }
+    //         //Left and right border
+    //         else if ((i > obstStartX - 2) && (i < obstStartX + obstLength - 1)) {
+    //             if ((j == obstStartZ - 2) || (j == obstStartZ + obstLength - 1)) {
+    //                 maze.at(i).at(j) = 'x';
+    //             }
+    //         }
+    //     }
+    // }
 
     // // Set starting point
     std::pair<int, int> startPoint = E1_setStartingPoint(maze);
@@ -376,7 +447,7 @@ std::vector<std::vector<char>> E1_genMaze(mcpp::Coordinate basePoint, int x_leng
     path.push_back(std::make_pair(startZ, startX));
 
     // Carve paths through maze
-    E1_carveMaze(maze, startZ, startX, path);
+    E1_carveMaze(maze, basePoint, startZ, startX, path);
 
     //Output "Maze generated successfully" 
     std::cout << "Maze generated successfully" << std::endl;

@@ -135,9 +135,14 @@ void Maze::E1_reverseMaze() {
 //Reverse maze blocks
     for (int x = 0; x < xlength; x++) {
         for (int z = 0; z < zlength; z++) {
-            for (int y = 0; y < 3; y++) {
-                if (mc.getBlock(basePoint + mcpp::Coordinate(x, y, z)) == WALL) {
-                    mc.setBlock(basePoint + mcpp::Coordinate(x, y, z), AIR);
+            //Get current height on maze 
+            //This will be different throughout since maze is built on slopes
+            int currHeight = mc.getHeight(basePoint.x + x, basePoint.z + z);
+
+            //Check the block found at the current height and 2 blocks beneath for walls and revert to air
+            for (int y = currHeight; y > currHeight - 3; y--) {
+                if (mc.getBlock(mcpp::Coordinate(basePoint.x + x, y, basePoint.z + z)) == WALL) {
+                    mc.setBlock(mcpp::Coordinate(basePoint.x + x, y, basePoint.z + z), AIR);
                 }
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
@@ -160,11 +165,13 @@ void Maze::E1_buildMazeInMC(std::vector<std::vector<char>> charMaze) {
         for (int z = 0; z < zlength; z++) {
             //If maze char is a wall
             if (charMaze.at(x).at(z) == 'x') {
+                //Get height of ground to build wall on
+                int currHeight = mc.getHeight(basePoint.x + x, basePoint.z + z);
                 //Set ACACIA walls only if blocks are air
-                for (int i = 0; i < 3; i++) {
+                for (int i = 1; i <= 3; i++) {
                     //If block is air, set to wall
-                    if (mc.getBlock(basePoint + mcpp::Coordinate(x, i, z)) == mcpp::Blocks::AIR) {
-                        mc.setBlock(basePoint + mcpp::Coordinate(x, i, z), WALL);
+                    if (mc.getBlock(mcpp::Coordinate(basePoint.x + x, currHeight + i, basePoint.z + z)) == mcpp::Blocks::AIR) {
+                        mc.setBlock(mcpp::Coordinate(basePoint.x + x, currHeight + i, basePoint.z + z), WALL);
                     }
                 }
             }
