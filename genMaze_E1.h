@@ -74,29 +74,24 @@ bool E1_isValid(std::vector<std::vector<char>> &inputMaze, int Z_Coord, int X_Co
         return false;
     }
     else {
-        //Check if current cell's wall is already carved as path '.'
-        //Also check if slope between current cell and neighbor is 
+        //Check if current cell's wall is already carved as path '.' or cell is 'x'
         if (direction == 0) { //UP
-            if ((inputMaze.at(X_Coord).at(Z_Coord) == '.') || (inputMaze.at(X_Coord+1).at(Z_Coord) == '.')
-            ||  (inputMaze.at(X_Coord).at(Z_Coord) == ' ') || (inputMaze.at(X_Coord+1).at(Z_Coord) == ' ')) {  // Check for 'X' and '_' UP
+            if ((inputMaze.at(X_Coord).at(Z_Coord) != '_') || (inputMaze.at(X_Coord+1).at(Z_Coord) != 'x')) {  // Check for 'X' and '_' UP
             return false;
             }
         }
         else if (direction == 1) { //RIGHT 
-            if ((inputMaze.at(X_Coord).at(Z_Coord) == '.') || (inputMaze.at(X_Coord).at(Z_Coord-1) == '.')
-            ||  (inputMaze.at(X_Coord).at(Z_Coord) == ' ') || (inputMaze.at(X_Coord).at(Z_Coord-1) == ' ')) {
+            if ((inputMaze.at(X_Coord).at(Z_Coord) != '_') || (inputMaze.at(X_Coord).at(Z_Coord-1) != 'x')) {
             return false;
             }
         }
         else if (direction == 2) { //DOWN
-            if ((inputMaze.at(X_Coord).at(Z_Coord) == '.') || (inputMaze.at(X_Coord-1).at(Z_Coord) == '.')
-            ||  (inputMaze.at(X_Coord).at(Z_Coord) == ' ') || (inputMaze.at(X_Coord-1).at(Z_Coord) == ' ')) {
+            if ((inputMaze.at(X_Coord).at(Z_Coord) != '_') || (inputMaze.at(X_Coord-1).at(Z_Coord) != 'x')) {
             return false;
             }
         }
         else if (direction == 3) { //LEFT
-            if (((inputMaze.at(X_Coord).at(Z_Coord) == '.')) || (inputMaze.at(X_Coord-1).at(Z_Coord + 1) == '.')
-            ||   ((inputMaze.at(X_Coord).at(Z_Coord) == ' ')) || (inputMaze.at(X_Coord-1).at(Z_Coord + 1) == ' ')) {
+            if (((inputMaze.at(X_Coord).at(Z_Coord) != '_')) || (inputMaze.at(X_Coord-1).at(Z_Coord + 1) != 'x')) {
                 return false;
             }
         }
@@ -397,13 +392,51 @@ std::vector<std::vector<char>> E1_genMaze(mcpp::Coordinate basePoint, int x_leng
     for (int i = 0; i < x_length; i++)  {
         for (int j = 0; j < z_length; j++) {
             //Height of terrain
-            int currHeight = mc.getHeight(i, j);
+            int currHeight = mc.getHeight(basePoint.x + i, basePoint.z + j);
+
             //Heighest block on terrain
             mcpp::BlockType obstacle = mc.getBlock(mcpp::Coordinate(basePoint.x + i, currHeight, basePoint.z + j));
             
             //Block out obstacle from maze with 'x'
             if (!(obstacle == ground)) {
-                maze.at(i).at(j) = 'x';
+                std::cout << "An obstacle was found" << std::endl;
+                //If cell is '_', set to ' '
+                if (maze.at(i).at(j) == '_') {
+                    maze.at(i).at(j) = ' ';
+                }
+                //If cell is set 'x', set to ' ' and set surrounding cells to 'x'
+                else if (maze.at(i).at(j) == 'x') {
+                    //Set obstacle cell to ' ' 
+                    maze.at(i).at(j) = ' ';
+                    //Right neighbor
+                    if (j + 1 < z_length) {
+                        //If cell is '_', set to 'x'
+                        if (maze.at(i).at(j + 1) == '_') {
+                            maze.at(i).at(j + 1) = 'x';
+                        }
+                    }
+                    //Left neighbor
+                    if (j - 1 > 0) {
+                        //If cell is '_', set to 'x'
+                        if (maze.at(i).at(j - 1) == '_') {
+                            maze.at(i).at(j - 1) = 'x';
+                        }
+                    }
+                    //Up neighbor
+                    if (i - 1 > 0) {
+                        //If cell is '_', set to 'x'
+                        if (maze.at(i - 1).at(j) == '_') {
+                            maze.at(i - 1).at(j) = 'x';
+                        }
+                    }
+                    //Down neighbor
+                    if (i + 1 < x_length) {
+                        //If cell is '_', set to 'x'
+                        if (maze.at(i + 1).at(j) == '_') {
+                            maze.at(i + 1).at(j) = 'x';
+                        }
+                    }
+                }
             }
         }
     }
@@ -433,7 +466,7 @@ std::vector<std::vector<char>> E1_genMaze(mcpp::Coordinate basePoint, int x_leng
     //     }
     // }
 
-    // // Set starting point
+    // Set starting point
     std::pair<int, int> startPoint = E1_setStartingPoint(maze);
 
     int startZ = startPoint.first;

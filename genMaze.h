@@ -90,22 +90,22 @@ bool isValid(std::vector<std::vector<char>> &inputMaze, int Z_Coord, int X_Coord
     else {
         //Check if current cell's wall is already carved as path '.'
         if (direction == 0) { //UP
-            if ((inputMaze.at(X_Coord).at(Z_Coord) == '.') || (inputMaze.at(X_Coord+1).at(Z_Coord) == '.')) {  // Check for 'X' and '_' UP
+            if ((inputMaze.at(X_Coord).at(Z_Coord) != '_') || (inputMaze.at(X_Coord+1).at(Z_Coord) != 'x')) {  // Check for 'X' and '_' UP
             return false;
             }
         }
         else if (direction == 1) { //RIGHT 
-            if ((inputMaze.at(X_Coord).at(Z_Coord) == '.') || (inputMaze.at(X_Coord).at(Z_Coord-1) == '.')) {
+            if ((inputMaze.at(X_Coord).at(Z_Coord) != '_') || (inputMaze.at(X_Coord).at(Z_Coord-1) != 'x')) {
             return false;
             }
         }
         else if (direction == 2) { //DOWN
-            if ((inputMaze.at(X_Coord).at(Z_Coord) == '.') || (inputMaze.at(X_Coord-1).at(Z_Coord) == '.')) {
+            if ((inputMaze.at(X_Coord).at(Z_Coord) != '_') || (inputMaze.at(X_Coord-1).at(Z_Coord) != 'x')) {
             return false;
             }
         }
         else if (direction == 3) { //LEFT
-            if (((inputMaze.at(X_Coord).at(Z_Coord) == '.')) || (inputMaze.at(X_Coord-1).at(Z_Coord + 1) == '.')) {
+            if (((inputMaze.at(X_Coord).at(Z_Coord) != '_')) || (inputMaze.at(X_Coord-1).at(Z_Coord + 1) != 'x')) {
                 return false;
             }
         }
