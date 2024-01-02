@@ -1,5 +1,8 @@
 // Include any necessary headers here
 #include <iostream>
+#include <list>
+#include <iterator>
+#include <algorithm>
 #include <vector>
 #include <limits>
 
@@ -15,6 +18,11 @@ public:
     int getLength() const;
     int getWidth() const;
     const std::vector<std::vector<char>>& getEnvStructure() const;
+
+    struct cell;
+    bool isMazeValid();
+    bool pathExists(cell currCell, cell entrance);
+
 
 private:
     int build_x;

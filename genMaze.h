@@ -23,7 +23,7 @@ int generateRandomOddNumber(int min, int max) {
 }
 
 //Function to set start point of maze
-std::pair<int, int> setStartingPoint(std::vector<std::vector<char>> &inputMaze, bool mode) {
+std::pair<int, int> setStartingPoint(std::vector<std::vector<char>> &inputMaze, bool &mode) {
     if (mode == 1) {
         return std::make_pair(1, 1);
     }
@@ -116,7 +116,7 @@ bool isValid(std::vector<std::vector<char>> &inputMaze, int Z_Coord, int X_Coord
 }
 
 //Function to create maze entrance
-void createEntrance(std::vector<std::vector<char>> &inputMaze, int startZ, int startX, bool mode) {
+void createEntrance(std::vector<std::vector<char>> &inputMaze, int &startZ, int &startX, bool &mode) {
     //Set rows and columns
     int rows = inputMaze.size();
     int columns = inputMaze.at(0).size();
@@ -143,7 +143,7 @@ void createEntrance(std::vector<std::vector<char>> &inputMaze, int startZ, int s
 }
 
 //Function to return vector with unvisited neighbors of current cell
-std::vector<std::pair<int, int>> unvisitedNeighbors(std::vector<std::vector<char>> maze, int Z, int X) {
+std::vector<std::pair<int, int>> unvisitedNeighbors(std::vector<std::vector<char>> &maze, int &Z, int &X) {
     std::vector<std::pair<int, int>> neighbors;
 
     // if UP is valid
@@ -174,7 +174,7 @@ return neighbors;
 }
 
 //Function to carve path through maze
-void carveMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<std::pair<int, int>> &path, bool mode) {
+void carveMaze(std::vector<std::vector<char>> &maze, int &Z, int &X, std::vector<std::pair<int, int>> &path, bool &mode) {
     //Carve path on current cell
     maze.at(X).at(Z) = '.';
 
@@ -202,6 +202,8 @@ void carveMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<s
             std::pair<int, int> prevCell = path.back();
             nextZ = prevCell.first;
             nextX = prevCell.second;
+            //Clear neighbors
+            unvisitedneighbors.clear();
             //RECURSIVE STEP: Call buildMaze on previous cell
             carveMaze(maze, nextZ, nextX, path, mode);
         }
@@ -230,6 +232,8 @@ void carveMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<s
             }
             //Add cell to path of visited cells
             path.push_back(std::make_pair(nextZ, nextX));
+            //Clear neighbors
+            unvisitedneighbors.clear();
             //RECURSIVE STEP: Call buildMaze on next cell
             carveMaze(maze, nextZ, nextX, path, mode);
         }
@@ -237,10 +241,17 @@ void carveMaze(std::vector<std::vector<char>> &maze, int Z, int X, std::vector<s
 } 
 
 //Function to generate a random maze
-std::vector<std::vector<char>> genMaze(int x_length, int z_length, bool mode) {
+std::vector<std::vector<char>> genMaze(int &x_length, int &z_length, bool &mode) {
 
     //Declare maze as 2D vector
     std::vector<std::vector<char>> maze;
+
+    //Reserve memory
+    maze.reserve(x_length);
+
+    for (int i = 0; i < x_length; i++) {
+        maze[i].reserve(z_length);
+    }
 
     //Initialise maze
     for (int i = 0; i < x_length; i++) {

@@ -10,13 +10,6 @@ readMaze::readMaze() {
     // envStructure = nullptr;
 }
 
-// readMaze::~readMaze() {
-//     for (int i = 0; i < envLength; i++) {
-//         delete[] envStructure[i];
-//     }
-//     delete[] envStructure;
-// }
-
 void readMaze::executeReadMaze() {
     // basePoint of Maze
 
@@ -71,12 +64,17 @@ void readMaze::executeReadMaze() {
 
     std::cout << "Enter the maze structure:" << std::endl;
 
+
+    //ADD: CHARACTER CHECKS FOR '.' AND 'x' ONLY
     for (int row = 0; row < envLength; row++) {
         for (int col = 0; col < envWidth; col++) {
             std::cin >> readChar;
             envStructure[row][col] = readChar;
         }
     }
+
+    //ADD: CHECK IF MAZE IS VALID/PERFECT
+    isMazeValid();
 
     // Print Information
     std::cout << "Maze read successfully" << std::endl;
@@ -114,4 +112,140 @@ int readMaze::getWidth() const {
 
 const std::vector<std::vector<char>>& readMaze::getEnvStructure() const {
     return envStructure;
+}
+
+struct readMaze::cell {
+    int X;
+    int Z;
+
+    cell getNeighbor(int direction) {
+        cell nextCell;
+        
+        if (direction == 0) { //UP
+            nextCell = {X - 2, Z};
+        }
+        else if (direction == 1) { //DOWN
+            nextCell = {X + 2, Z};
+        }
+        else if (direction == 2) { //LEFT
+            nextCell = {X, Z - 2};
+        }
+        else if (direction == 3) { //RIGHT
+            nextCell = {X, Z + 2};
+        }
+        
+        return nextCell;
+    }
+
+    bool operator==(cell otherCell) {
+        return ((X == otherCell.X) && (Z == otherCell.Z));
+    }
+};
+
+//DFS Search to determine if maze is valid
+bool readMaze::pathExists(cell currCell, cell entrance) {
+
+    //Vector to track visited cells
+    std::vector<cell> visited;
+
+    //Create queue for DFS
+    std::list<cell> queue;
+
+    //Mark entrance as visited and push onto queue
+    visited.push_back(currCell);
+    queue.push_back(currCell);
+
+
+    while (!queue.empty()) {
+        //Dequeue front cell 
+        currCell = queue.front();
+        queue.pop_front();
+
+        //Get adjacent neighbors on current cell
+
+        for (int direction = 0; direction < 4; ++direction) {
+            cell neighbor = currCell.getNeighbor(direction);
+
+            //Check neighbor is within maze boundaries
+            if ((neighbor.X >= 0) && (neighbor.X <= envLength) && (neighbor.Z >= 0) && (neighbor.Z <= envLength)) {
+                //If neighbor is entrance, return true
+                if (neighbor == entrance) {
+                    return true;
+                }
+                //Mark neighbor as visited and push onto queue
+                if ((envStructure[neighbor.X - 2][neighbor.Z] == '.') && (envStructure[neighbor.X - 1][neighbor.Z] == '.')) {
+                    visited.push_back(neighbor);
+                    queue.push_back(neighbor);
+                    direction = 4;
+                }
+            }
+        }
+    }
+    
+    return false;
+}
+
+
+bool readMaze::isMazeValid() {
+
+    int envLength = envStructure.size();
+    int envWidth = envStructure[0].size();
+
+    bool isValid = true;
+    int mazeEntranceX = -1;
+    int mazeEntranceZ = -1;
+
+    //STEP 1: FIND ENTRY POINT
+
+    //CHECK TOP & BOTTOM WALLS
+    for (int col = 1; col < envWidth - 1; ++col) {
+        //Top 
+        if (envStructure[0][col] == '.') {
+            mazeEntranceX = 0;
+            mazeEntranceZ = col;
+        }
+        //Bottom
+        else if (envStructure[envLength - 1][col] == '.') {
+            mazeEntranceX = envLength - 1;
+            mazeEntranceZ = col;
+        }
+    }
+
+    //CHECK LEFT & RIGHT WALLS
+    for (int row = 1; row < envLength - 1; ++row) {
+        if (envStructure[row][0] == '.') {
+            mazeEntranceX = row;
+            mazeEntranceZ = 0;
+        }
+        else if (envStructure[row][envWidth - 1] == '.') {
+            mazeEntranceX = row;
+            mazeEntranceZ = envWidth - 1;
+        } 
+    }
+
+    //If entrance not found, return false
+    if ((mazeEntranceX == -1) && (mazeEntranceZ == -1)) {
+        return false;
+    }
+
+    //STEP 2: CHECK MAZE PATHS - BFS
+
+    //If maze is valid, each carved cell has one unique path to the entrance
+
+    cell entrance = {mazeEntranceX, mazeEntranceZ};
+
+    for (int row = 1; row < envLength - 1; ++row) {
+        for (int col = 1; col < envWidth - 1; ++col) {
+            //Perform BFS on each cell, '.', to determine it has a valid path to entrance
+            if (envStructure[row][col] == '.') {
+                cell currCell= {row, col};
+                if (!pathExists(currCell, entrance)) {
+                    return false;
+                }
+            }
+        }
+    }
+    
+
+    return isValid;
 }

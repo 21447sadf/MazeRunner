@@ -18,6 +18,14 @@ For most tasks each team member were working individually on their tasks using t
 When everyone completed their tasks on their seperate branches, the branches are then merged to the main central repository 
 to form the complete program.
 
+### CURRENT ISSUES
+   - Program doesn't generate 99x99 maze (returns SEGFAULT) - max 41 x 41.
+   - Path display removes slope blocks in E1.
+
+### FIXES
+   - Proper detection and avoidance of obstacles (E1).
+   - Rejection of slopes > 1 (E1).
+
 ## Program Information
 This program is an expansion pack to the game Minecraft. 
 It allows players to generate, build and solve mazes in the game.
@@ -79,6 +87,10 @@ PROGRAM ASSUMPTIONS:
    -	User is building maze above ground.
    -	User is building maze at a reasonable location where they can enter (eg:not inside a mountain, ocean).
    -	Terrain is made of single block type and free of obstacles above ground (eg:trees). The program will not replace these blocks, it will only revert the terrain to its original state.
+5. Enhancement 1 - Build Maze around Obstacles
+   - User is building maze around 1 obstacle
+   - Obstacle is quadrilateral shape
+
 
 ## Task Allocation
 1. Menu Navigation
