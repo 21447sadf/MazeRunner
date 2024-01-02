@@ -167,13 +167,13 @@ bool readMaze::pathExists(cell currCell, cell entrance) {
             cell neighbor = currCell.getNeighbor(direction);
 
             //Check neighbor is within maze boundaries
-            if ((neighbor.X >= 0) && (neighbor.X <= envLength) && (neighbor.Z >= 0) && (neighbor.Z <= envLength)) {
+            if ((neighbor.X >= 2) && (neighbor.X < envLength) && (neighbor.Z >= 2) && (neighbor.Z < envLength)) {
                 //If neighbor is entrance, return true
                 if (neighbor == entrance) {
                     return true;
                 }
                 //Mark neighbor as visited and push onto queue
-                if ((envStructure[neighbor.X - 2][neighbor.Z] == '.') && (envStructure[neighbor.X - 1][neighbor.Z] == '.')) {
+                if ((envStructure[neighbor.X][neighbor.Z] == '.')) {
                     visited.push_back(neighbor);
                     queue.push_back(neighbor);
                     direction = 4;
